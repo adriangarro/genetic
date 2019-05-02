@@ -139,20 +139,29 @@ function searchIn(modal, table) {
 function loadJSON(htmlInputID) {
     function onReaderLoad(event) {
         let jsn = JSON.parse(event.target.result);
-        console.log("JSON:")
-        console.log(jsn);
-        sessionStorage.setItem(htmlInputID, JSON.stringify(jsn));
         /* not generic code */
-        if (htmlInputID == "agentsJSON") {
-            setAgentsInTable(jsn);
-            searchIn("searchAgent", "tblBodyAgents");
-            $("#seeAgentsDiv").show();
-        } else if (htmlInputID == "ordersJSON") {
-            setOrdersInTable(jsn);
-            searchIn("searchOrder", "tblBodyOrders");
-            $("#seeOrdersDiv").show();
+        try {    
+            if (htmlInputID == "agentsJSON") {
+                setAgentsInTable(jsn);
+                searchIn("searchAgent", "tblBodyAgents");
+                $("#seeAgentsDiv").show();
+            } else if (htmlInputID == "ordersJSON") {
+                setOrdersInTable(jsn);
+                searchIn("searchOrder", "tblBodyOrders");
+                $("#seeOrdersDiv").show();
+            }
+            sessionStorage.setItem(htmlInputID, JSON.stringify(jsn));
+        } catch (error) {
+            sessionStorage.clear();
+            $("#tblBodyAgents").html("");
+            $("#tblBodyOrders").html("");
+            $("#seeAgentsDiv").hide();
+            $("#seeOrdersDiv").hide();
+            $("#agentsJSON").val("");
+            $("#ordersJSON").val("");
+            voiceProcessor.readOutLoud("Archivo inválido.");
         }
-        /* not generic code last line */
+        /* not generic code, last line */
     }
     $("#" + htmlInputID).change(function (event) {
         let reader = new FileReader();
@@ -215,10 +224,46 @@ function controlModalTables() {
     });
 }
 
+function main() {
+    $(document).on("keypress", function(e) {
+        // if press 1
+        if (e.which == 49) {
+            voiceProcessor.startRecognition();
+        }
+        // if press 0
+        else if (e.which == 48) {
+            voiceProcessor.stopRecognition();
+            // after stop recognition:
+            setTimeout(function() {
+                let transcript = sessionStorage.getItem("transcript");
+                if (transcript) {
+                    sessionStorage.removeItem("transcript");
+                    let command = fixMessage(transcript).split(" ");
+                    // CLEAR
+                    if (command[0] == "LIMPIAR") {
+                        sessionStorage.clear();
+                        window.location = "index.html";
+                    }
+                    // REFRESH
+                    else if (command[0] == "REFRESCAR") {
+                        window.location = "index.html";
+                    }
+                    else {
+                        voiceProcessor.readOutLoud("Comando no identificado.");
+                    }
+                } else {
+                    voiceProcessor.readOutLoud("No se ha procesado ninguna orden.");
+                }
+            }, 1000);
+        }
+    });
+}
+
 jQuery(
     $(document).ready(function () {
         loadJSON("agentsJSON"),
         loadJSON("ordersJSON"),
-        controlModalTables()
+        controlModalTables(),
+        main()
     })
 );
