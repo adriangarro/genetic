@@ -248,6 +248,32 @@ function main() {
                     else if (command[0] == "REFRESCAR") {
                         window.location = "index.html";
                     }
+                    // ADD FILE
+                    else if (command[0] == "AGREGAR") {
+                        if (command[1] == "AGENTES" || command[1] == "AGENTE") {
+                            $("#agentsJSON").click();
+                        } else if (command[1] == "ORDENES" || command[1] == "ORDEN") {
+                            $("#ordersJSON").click();
+                        } else {
+                            voiceProcessor.readOutLoud("Comando no identificado.");
+                        }
+                    }
+                    // SEE DATA
+                    else if (command[0] == "VER") {
+                        if (command[1] == "AGENTES" || command[1] == "AGENTE") {
+                            if ( $("#seeAgents").is(":visible") )
+                                $("#seeAgents").click();
+                            else
+                                voiceProcessor.readOutLoud("No se han agregado agentes.");
+                        } else if (command[1] == "ORDENES" || command[1] == "ORDEN") {
+                            if ( $("#seeOrders").is(":visible") )
+                                $("#seeOrders").click();
+                            else
+                                voiceProcessor.readOutLoud("No se han agregado órdenes.");
+                        } else {
+                            voiceProcessor.readOutLoud("Comando no identificado.");
+                        }
+                    }
                     else {
                         voiceProcessor.readOutLoud("Comando no identificado.");
                     }
