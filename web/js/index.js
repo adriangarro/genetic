@@ -142,11 +142,11 @@ class Genetic {
     }
 
     createAgents() {
-
+        // faker.name.findName()
     }
 
     createOrders() {
-
+        // faker.name.findName()
     }
 
 }
