@@ -143,10 +143,11 @@ class Genetic {
 
     createAgents() {
         // faker.name.findName()
+        // faker.random.uuid()
     }
 
     createOrders() {
-        // faker.name.findName()
+        //faker.name.findName()
     }
 
 }
@@ -156,6 +157,7 @@ let gen = new Genetic();
 /* UI */
 
 function setAgentsInTable(jsn) {
+    let count = 0;
     Object.keys(jsn).forEach(function(key) {
         let row = "<tr>"
             + "<td>" + key + "</td>"
@@ -166,10 +168,13 @@ function setAgentsInTable(jsn) {
         });
         row = row + "</td>" + "</tr>";
         $(row).appendTo("#tblBodyAgents");
+        count = count + 1;
     });
+    $("#quantAgents").text("N=" + count);
 }
 
 function setOrdersInTable(jsn) {
+    let count = 0;
     Object.keys(jsn).forEach(function(key) {
         let row = "<tr>"
             + "<td>" + key + "</td>"
@@ -177,7 +182,9 @@ function setOrdersInTable(jsn) {
             + "<td>" + jsn[key].service + "</td>"
             + "</tr>";
         $(row).appendTo("#tblBodyOrders");
+        count = count + 1;
     });
+    $("#quantOrders").text("N=" + count);
 }
 
 function searchIn(modal, table) {
@@ -206,6 +213,8 @@ function loadJSON(htmlInputID) {
             sessionStorage.setItem(htmlInputID, JSON.stringify(jsn));
         } catch (error) {
             sessionStorage.clear();
+            $("#quantAgents").text("");
+            $("#quantOrders").text("");
             $("#tblBodyAgents").html("");
             $("#tblBodyOrders").html("");
             $("#seeAgentsDiv").hide();
@@ -252,6 +261,7 @@ function main() {
                         sessionStorage.clear();
                         window.location = "index.html";
                     }
+                    // CREATE FILE
                     // ADD FILE
                     else if (command[0] == "AGREGAR") {
                         if (command[1] == "AGENTES" || command[1] == "AGENTE") {
@@ -289,11 +299,16 @@ function main() {
     });
 }
 
+function test() {
+    alert(faker.random.number() % 2000);
+}
+
 jQuery(
     $(document).ready(function () {
         loadJSON("agentsJSON"),
         loadJSON("ordersJSON"),
         controlModalTables(),
-        main()
+        main(),
+        //test()
     })
 );
