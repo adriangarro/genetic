@@ -102,6 +102,59 @@ let voiceProcessor = new VoiceProcessor();
 
 /* GENETIC ALGORITHM */
 
+class Genetic {
+
+    constructor() {
+        this.agents = undefined;
+        this.orders = undefined;
+        this.services = {
+            "s1" : {
+                "code" : "ICE", 
+                "hours" : 2, 
+                "cost" : 250
+            },
+            "s2" : {
+                "code" : "ICG", 
+                "hours" : 4, 
+                "cost" : 400
+            },
+            "s3" : {
+                "code" : "ILA", 
+                "hours" : 1, 
+                "cost" : 200
+            },
+            "s4" : {
+                "code" : "RCE", 
+                "hours" : 4, 
+                "cost" : 300
+            },
+            "s5" : {
+                "code" : "RCG", 
+                "hours" : 6, 
+                "cost" : 500
+            },
+            "s6" : {
+                "code" : "RLA", 
+                "hours" : 6, 
+                "cost" : 250
+            }
+        };
+    }
+
+    createAgents() {
+
+    }
+
+    createOrders() {
+
+    }
+
+}
+
+let gen = new Genetic();
+
+/* UI */
+
 function setAgentsInTable(jsn) {
     Object.keys(jsn).forEach(function(key) {
         let row = "<tr>"
@@ -170,51 +223,6 @@ function loadJSON(htmlInputID) {
     });
 }
 
-class Genetic {
-
-    constructor() {
-        this.agents = undefined;
-        this.orders = undefined;
-        this.services = {
-            "s1" : {
-                "code" : "ICE", 
-                "hours" : 2, 
-                "cost" : 250
-            },
-            "s2" : {
-                "code" : "ICG", 
-                "hours" : 4, 
-                "cost" : 400
-            },
-            "s3" : {
-                "code" : "ILA", 
-                "hours" : 1, 
-                "cost" : 200
-            },
-            "s4" : {
-                "code" : "RCE", 
-                "hours" : 4, 
-                "cost" : 300
-            },
-            "s5" : {
-                "code" : "RCG", 
-                "hours" : 6, 
-                "cost" : 500
-            },
-            "s6" : {
-                "code" : "RLA", 
-                "hours" : 6, 
-                "cost" : 250
-            }
-        };
-    }
-
-    test() {
-
-    }
-
-}
-
 function controlModalTables() {
     $("#seeAgents").click(function() {
         $("#consultAgents").modal("show");
@@ -242,10 +250,6 @@ function main() {
                     // CLEAR
                     if (command[0] == "LIMPIAR") {
                         sessionStorage.clear();
-                        window.location = "index.html";
-                    }
-                    // REFRESH
-                    else if (command[0] == "REFRESCAR") {
                         window.location = "index.html";
                     }
                     // ADD FILE
