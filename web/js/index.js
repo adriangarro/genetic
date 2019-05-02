@@ -102,15 +102,48 @@ let voiceProcessor = new VoiceProcessor();
 
 /* GENETIC ALGORITHM */
 
-function loadJSON(htmlInput, keyStorage, buttonToShow) {
+function setAgentsInTable(jsn) {
+    Object.keys(jsn).forEach(function(key) {
+        let row = "<tr>"
+            + "<td>" + key + "</td>"
+            + "<td>" + jsn[key].name + "</td>"
+            + "<td>"
+        Object.keys(jsn[key].services).forEach(function(s) {
+            row = row + s + " ";
+        });
+        row = row + "</td>" + "</tr>";
+        $(row).appendTo("#tblBodyAgents");
+    });
+}
+
+function setOrdersInTable(jsn) {
+    Object.keys(jsn).forEach(function(key) {
+        let row = "<tr>"
+            + "<td>" + key + "</td>"
+            + "<td>" + jsn[key].client + "</td>"
+            + "<td>" + jsn[key].service + "</td>"
+            + "</tr>";
+        $(row).appendTo("#tblBodyOrders");
+    });
+}
+
+function loadJSON(htmlInputID) {
     function onReaderLoad(event) {
         let jsn = JSON.parse(event.target.result);
         console.log("JSON:")
         console.log(jsn);
-        sessionStorage.setItem(keyStorage, JSON.stringify(jsn));
-        $("#" + buttonToShow).show();
+        sessionStorage.setItem(htmlInputID, JSON.stringify(jsn));
+        /* not generic code */
+        if (htmlInputID == "agentsJSON") {
+            setAgentsInTable(jsn);
+            $("#seeAgentsDiv").show();
+        } else if (htmlInputID == "ordersJSON") {
+            setOrdersInTable(jsn);
+            $("#seeOrdersDiv").show();
+        }
+        /* not generic code last line */
     }
-    $("#" + htmlInput).change(function (event) {
+    $("#" + htmlInputID).change(function (event) {
         let reader = new FileReader();
         reader.onload = onReaderLoad;
         reader.readAsText(event.target.files[0]);
@@ -173,7 +206,8 @@ function controlModalTables() {
 
 jQuery(
     $(document).ready(function () {
-        // load json
+        loadJSON("agentsJSON"),
+        loadJSON("ordersJSON"),
         controlModalTables()
     })
 );
