@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Genetic Algorithm</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Open+Sans|Candal|Alegreya+Sans">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/imagehover.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css">
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav id="welcomeNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#customerNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">GEN<span>ALGORITHM</span></a>
+        </div>
+    </div>
+</nav>
+
+<!-- Modals -->
+
+<!-- Modal #1 Consult Agents -->
+<div class="modal fade" tabindex="-1" id="consultAgents" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-center form-title">Lista de Agentes</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <font size="2">
+                    <table class="table table-condensed" id="tblGridAgents">
+                        <thead id="tblHeadAgents">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBodyAgents">
+                        </tbody>
+                    </table>
+                    </font>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal #1 Consult Agents -->
+
+<!-- Modal #2 Consult Orders -->
+<div class="modal fade" tabindex="-1" id="consultOrders" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-center form-title">Lista de Órdenes</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <font size="2">
+                    <table class="table table-condensed" id="tblGridOrders">
+                        <thead id="tblHeadOrders">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBodyOrders">
+                        </tbody>
+                    </table>
+                    </font>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal #2 Consult Orders -->
+
+<!-- Modals -->
+
+<!-- Main -->
+<section id="feature" class="section-padding">
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center">¡Bienvenido(a)!</h1>
+        </div>
+        <br>
+        <div class="row no-gutters">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-3">
+                    <label for="agentsJSON">Agentes de servicio:</label>
+                    <input type="file" id="agentsJSON" name="agentsJSON" accept=".json">
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <button id="seeAgents" type="button" class="btn btn-success" style="margin:10px;">VER AGENTES</button>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-2 col-md-offset-3">
+                    <label for="ordersJSON">Órdenes de servicio:</label>
+                    <input type="file" id="ordersJSON" name="ordersJSON" accept=".json">
+                </div>
+                <div class="col-md-2 col-md-offset-2">
+                    <button id="seeOrders" type="button" class="btn btn-success" style="margin:10px;">VER SERVICIOS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+<!-- Main -->
+
+<!-- Footer -->
+<footer id="complexFooter">
+    <div class="row">
+        <div class="col-lg-12 mx-auto text-center">
+            <h2 style="color:black;">
+                Genetic Algorithm
+            </h2>
+            <ul class="list-unstyled">
+                <li>
+                    <!-- <i class="fa fa-mobile fa-fw"></i>85635561-->
+                    <i class="fa fa-envelope-o fa-fw"></i>
+                    <a href="mailto:@">adriangarro81@gmail.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-envelope-o fa-fw"></i>
+                    <a href="mailto:@">dmcsubotai95@gmail.com</a>
+                </li>
+            </ul>
+            <br>
+            <hr class="small">
+            <p class="text-muted">Copyright &copy; Adrián Garro, Darío Monestel</p>
+        </div>
+    </div>
+</footer>
+<!-- Footer -->
+
+<!-- Scripts -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="js/bootstrap.min.js"></script>
+<!-- Index -->
+<script src="js/index.js"></script>
+<!-- Scripts -->
+
+</body>
+</html>

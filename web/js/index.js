@@ -1,0 +1,179 @@
+// Artificial Intelligence
+// System of Distribution of Orders of Service Making use of Genetic Algorithm.
+
+/* VOICE HANDLER */
+
+// stringHelpers
+
+function removeAccents(strAccents) {
+	strAccents = strAccents.split("");
+	let strAccentsOut = new Array();
+	let strAccentsLen = strAccents.length;
+	let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüŠšŸÿýŽž";
+	let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuSsYyyZz";
+	for (let y = 0; y < strAccentsLen; y++) {
+		if (accents.indexOf(strAccents[y]) !== -1) {
+			strAccentsOut[y] = accentsOut.substr(accents.indexOf(strAccents[y]), 1);
+		} else {
+			strAccentsOut[y] = strAccents[y];
+		}
+	}
+	strAccentsOut = strAccentsOut.join("");
+	return strAccentsOut;
+}
+
+// removeAccents + toUpperCase
+function fixMessage(input) {
+	return removeAccents(
+        input
+    ).toUpperCase();
+}
+
+function isPositiveInt(str) {
+    let n = Number(str);
+    return Number.isInteger(n) && n > 0;
+}
+
+// Voice Processor (ONLY GOOGLE CHROME => 2019)
+
+class VoiceProcessor {
+    constructor() {
+        this.recognition = null;
+        try {
+            let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+        }
+        catch(e) {
+            console.error(e);
+            $(".no-browser-support").show();
+            $(".app").hide();
+        }
+        // Configure voice recognition 
+        if (this.recognition) {
+            // If false, the recording will stop after a few seconds of silence.
+            // When true, the silence period is longer (about 15 seconds),
+            // allowing us to keep recording even when the user pauses. 
+            this.recognition.continuous = true;
+            // This block is called every time the Speech APi captures a line. 
+            this.recognition.onresult = function(event) {
+                // event is a SpeechRecognitionEvent object.
+                // It holds all the lines we have captured so far. 
+                // We only need the current one.
+                let current = event.resultIndex;
+                // Get a transcript of what was said.
+                let transcript = event.results[current][0].transcript;
+                sessionStorage.setItem("transcript", transcript);
+                console.log(transcript);
+            }
+            this.recognition.onstart = function() { 
+                console.log("Voice recognition activated.");
+            }
+            this.recognition.onspeechend = function() {
+                console.log("Voice recognition turned off.");
+            }
+            this.recognition.onerror = function(event) {
+                if (event.error == "no-speech") {
+                    console.log("No speech was detected. Try again.");  
+                }
+            }
+        }
+    }
+
+    startRecognition() {
+        this.recognition.start();
+    }
+
+    stopRecognition() {
+        this.recognition.stop();
+    }
+
+    readOutLoud(message) {
+        let speech = new SpeechSynthesisUtterance();
+        // set text and voice attributes
+        speech.text = message;
+        speech.volume = 1;
+        speech.rate = 1;
+        speech.pitch = 1;
+        window.speechSynthesis.speak(speech);
+    }
+}
+
+let voiceProcessor = new VoiceProcessor();
+
+/* GENETIC ALGORITHM */
+
+function loadJSON(htmlInput, keyStorage, buttonToShow) {
+    function onReaderLoad(event) {
+        let jsn = JSON.parse(event.target.result);
+        console.log("JSON:")
+        console.log(jsn);
+        sessionStorage.setItem(keyStorage, JSON.stringify(jsn));
+        $("#" + buttonToShow).show();
+    }
+    $("#" + htmlInput).change(function (event) {
+        let reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(event.target.files[0]);
+    });
+}
+
+class Genetic {
+
+    constructor() {
+        this.agents = undefined;
+        this.orders = undefined;
+        this.services = {
+            "s1" : {
+                "code" : "ICE", 
+                "hours" : 2, 
+                "cost" : 250
+            },
+            "s2" : {
+                "code" : "ICG", 
+                "hours" : 4, 
+                "cost" : 400
+            },
+            "s3" : {
+                "code" : "ILA", 
+                "hours" : 1, 
+                "cost" : 200
+            },
+            "s4" : {
+                "code" : "RCE", 
+                "hours" : 4, 
+                "cost" : 300
+            },
+            "s5" : {
+                "code" : "RCG", 
+                "hours" : 6, 
+                "cost" : 500
+            },
+            "s6" : {
+                "code" : "RLA", 
+                "hours" : 6, 
+                "cost" : 250
+            }
+        };
+    }
+
+    test() {
+
+    }
+
+}
+
+function controlModalTables() {
+    $("#seeAgents").click(function() {
+        $("#consultAgents").modal("show");
+    });
+    $("#seeOrders").click(function() {
+        $("#consultOrders").modal("show");
+    });
+}
+
+jQuery(
+    $(document).ready(function () {
+        // load json
+        controlModalTables()
+    })
+);

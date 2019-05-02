@@ -1,0 +1,42 @@
+{
+    "a1" : { 
+        "name" : "Aubrey Rowland", 
+        "services" : { "ICE" : true, "ILA" : true, "RCG" : true, "RLA" : true } 
+    },
+    "a2" : { 
+        "name" : "Yair Lamb", 
+        "services" : { "ICG" : true, "RLA" : true, "RCE" : true } 
+    },
+    "a3" : { 
+        "name" : "Leonardo Payne", 
+        "services" : { "RCE" : true, "ICE" : true, "ICG" : true } 
+    },
+    "a4" : { 
+        "name" : "Carl Henson", 
+        "services" : { "RCE" : true, "RLA" : true } 
+    },
+    "a5" : { 
+        "name" : "Jensen Combs", 
+        "services" : { "ICE" : true, "ILA" : true, "RCG" : true, "ICG" : true } 
+    },
+    "a6" : { 
+        "name" : "Amiah Burton", 
+        "services" : { "ICG" : true, "RCG" : true, "ICE" : true, "ILA" : true } 
+    },
+    "a7" : { 
+        "name" : "Yaretzi Mayo", 
+        "services" : { "RCE" : true, "RCG" : true } 
+    },
+    "a8" : { 
+        "name" : "Kamren Huffman", 
+        "services" : { "RLA" : true, "RCE" : true, "RCG" : true, "ICE" : true } 
+    },
+    "a9" : { 
+        "name" : "Marco Lizano", 
+        "services" : { "RLA" : true, "ICE" : true, "ICG" : true, "ILA" : true } 
+    },
+    "a10" : { 
+        "name" : "Abel Stone", 
+        "services" : { "ICG" : true, "RCG" : true, "ILA" : true} 
+    }
+}
