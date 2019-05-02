@@ -127,6 +127,15 @@ function setOrdersInTable(jsn) {
     });
 }
 
+function searchIn(modal, table) {
+    $("#" + modal).keyup(function () {
+        let value = $(this).val().toLowerCase();
+        $("#" + table + " tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+}
+
 function loadJSON(htmlInputID) {
     function onReaderLoad(event) {
         let jsn = JSON.parse(event.target.result);
@@ -136,9 +145,11 @@ function loadJSON(htmlInputID) {
         /* not generic code */
         if (htmlInputID == "agentsJSON") {
             setAgentsInTable(jsn);
+            searchIn("searchAgent", "tblBodyAgents");
             $("#seeAgentsDiv").show();
         } else if (htmlInputID == "ordersJSON") {
             setOrdersInTable(jsn);
+            searchIn("searchOrder", "tblBodyOrders");
             $("#seeOrdersDiv").show();
         }
         /* not generic code last line */
