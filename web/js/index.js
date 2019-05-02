@@ -105,6 +105,8 @@ let voiceProcessor = new VoiceProcessor();
 class Genetic {
 
     constructor() {
+        this.maxAgentQuant = 50;
+        this.maxOrdersQuant = 200;
         this.agents = undefined;
         this.orders = undefined;
         this.services = {
@@ -141,9 +143,18 @@ class Genetic {
         };
     }
 
+    setMaxAgentQuant(n) {
+        this.maxAgentQuant = n;
+    }
+
+    setMaxOrdersQuant(n) {
+        this.maxOrdersQuant = n;
+    }
+
     createAgents() {
         // faker.name.findName()
         // faker.random.uuid()
+        // faker.random.number()
     }
 
     createOrders() {
