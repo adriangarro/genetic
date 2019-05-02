@@ -308,7 +308,7 @@ jQuery(
         loadJSON("agentsJSON"),
         loadJSON("ordersJSON"),
         controlModalTables(),
-        main(),
+        main()
         //test()
     })
 );
