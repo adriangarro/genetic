@@ -105,10 +105,9 @@ let voiceProcessor = new VoiceProcessor();
 class Genetic {
 
     constructor() {
+        // default values, user can change it
         this.maxAgentQuant = 50;
-        this.maxOrdersQuant = 200;
-        this.agents = undefined;
-        this.orders = undefined;
+        this.maxOrderQuant = 200;
         this.services = {
             "s1" : {
                 "code" : "ICE", 
@@ -147,18 +146,53 @@ class Genetic {
         this.maxAgentQuant = n;
     }
 
-    setMaxOrdersQuant(n) {
-        this.maxOrdersQuant = n;
+    setMaxOrderQuant(n) {
+        this.maxOrderQuant = n;
     }
 
     createAgents() {
-        // faker.name.findName()
-        // faker.random.uuid()
-        // faker.random.number()
+        let agents = {};
+        for (let a = 0; a < this.maxAgentQuant; ++a) {
+            // take some services randomly
+            let servicesKeys = Object.keys(this.services);
+            let maxQuantOfKeys =  ( faker.random.number() % servicesKeys.length ) + 1;
+            let keysToUse = [];
+            for (let loop = 0; loop < maxQuantOfKeys; ++loop) {
+                let randKeyIndex = faker.random.number() % (servicesKeys.length);
+                if (!keysToUse.includes(servicesKeys[randKeyIndex])) {
+                    keysToUse.push(servicesKeys[randKeyIndex]);
+                }
+            }
+            let services = {};
+            for (let key of keysToUse) {
+                services[this.services[key].code] = true;
+            }
+            // create random agent
+            let agentUUID = "a" + faker.random.uuid();
+            agents[agentUUID ] = {
+                "name" : faker.name.findName(),
+                "services" : services
+            }
+        }
+        return agents;
     }
 
     createOrders() {
-        //faker.name.findName()
+        let orders = {};
+        for (let o = 0; o < this.maxOrderQuant; ++o) {
+            // get random service
+            let servicesKeys = Object.keys(this.services);
+            let randKeyIndex = faker.random.number() % (servicesKeys.length);
+            let serviceKey = servicesKeys[randKeyIndex];
+            let service = this.services[serviceKey].code;
+            // create random order
+            let orderUUID = "o" + faker.random.uuid();
+            orders[orderUUID ] = {
+                "client" : faker.name.findName(),
+                "service" : service
+            }
+        }
+        return orders;
     }
 
 }
@@ -272,7 +306,40 @@ function main() {
                         sessionStorage.clear();
                         window.location = "index.html";
                     }
+                    // SET AGENTS QUANT
+                    else if (command[0] == "AGENTES") {
+                        if ( isPositiveInt(command[1]) ) {
+                            gen.setMaxAgentQuant( parseInt(command[1]) );
+                        } else {
+                            voiceProcessor.readOutLoud("Valor inválido.");
+                        }
+                    }
+                    // SET ORDERS QUANT
+                    else if (command[0] == "ORDENES") {
+                        if ( isPositiveInt(command[1]) ) {
+                            gen.setMaxOrderQuant( parseInt(command[1]) );
+                        } else {
+                            voiceProcessor.readOutLoud("Valor inválido.");
+                        }
+                    }
                     // CREATE FILE
+                    else if (command[0] == "CREAR") {
+                        if (command[1] == "AGENTES" || command[1] == "AGENTE") {
+                            let jsn = gen.createAgents();
+                            setAgentsInTable(jsn);
+                            searchIn("searchAgent", "tblBodyAgents");
+                            $("#seeAgentsDiv").show();
+                            sessionStorage.setItem("agentsJSON", JSON.stringify(jsn));
+                        } else if (command[1] == "ORDENES" || command[1] == "ORDEN") {
+                            let jsn = gen.createOrders();
+                            setOrdersInTable(jsn);
+                            searchIn("searchOrder", "tblBodyOrders");
+                            $("#seeOrdersDiv").show();
+                            sessionStorage.setItem("ordersJSON", JSON.stringify(jsn));
+                        } else {
+                            voiceProcessor.readOutLoud("Comando no identificado.");
+                        }
+                    }
                     // ADD FILE
                     else if (command[0] == "AGREGAR") {
                         if (command[1] == "AGENTES" || command[1] == "AGENTE") {
@@ -311,7 +378,7 @@ function main() {
 }
 
 function test() {
-    alert(faker.random.number() % 2000);
+    //console.log(gen.createOrders());
 }
 
 jQuery(
@@ -319,7 +386,7 @@ jQuery(
         loadJSON("agentsJSON"),
         loadJSON("ordersJSON"),
         controlModalTables(),
-        main()
-        //test()
+        main(),
+        test()
     })
 );
