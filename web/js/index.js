@@ -307,7 +307,7 @@ function main() {
                         window.location = "index.html";
                     }
                     // SET AGENTS QUANT
-                    else if (command[0] == "AGENTES") {
+                    else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
                             gen.setMaxAgentQuant( parseInt(command[1]) );
                         } else {
@@ -315,7 +315,7 @@ function main() {
                         }
                     }
                     // SET ORDERS QUANT
-                    else if (command[0] == "ORDENES") {
+                    else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
                             gen.setMaxOrderQuant( parseInt(command[1]) );
                         } else {
