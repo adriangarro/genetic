@@ -286,7 +286,7 @@ class Genetic {
         return Math.abs( this.getGenCost(gen) - this.heuristicVal);
     }
 
-    getBestGen() {
+    getBestGenKey() {
         let populationKeys = Object.keys(this.population);
         let bestGenKey = populationKeys[0];
         let bestGen = this.population[bestGenKey];
@@ -294,10 +294,11 @@ class Genetic {
             let currentGenKey = populationKeys[index];
             let currentGen = this.population[currentGenKey];
             if (this.fitness(currentGen) < this.fitness(bestGen)) {
+                bestGenKey = currentGenKey;
                 bestGen = currentGen;
             }
         }
-        return bestGen;
+        return bestGenKey;
     }
 
     evolution() {
@@ -305,10 +306,16 @@ class Genetic {
         let periods = this.agentsKeys.length * this.ordersKeys.length;
         for (let period = 0; period < periods; ++period) {
             /* Selection Process */
-            let oldPopulation = this.population;
-            // getBestGen()
             let newPopulation = {};
             // get the half of best agents
+            // half of the population xD
+            let thanosSnapQuant = Object.keys(this.population).length / 2;
+            for (let survivorQuant = 0; survivorQuant < thanosSnapQuant; ++survivorQuant) {
+                let survivorKey = this.getBestGenKey();
+                newPopulation[survivorKey] = this.population[survivorKey];
+                delete this.population[survivorKey];
+            }
+            this.population = newPopulation;
             /* Crossing Process */
             // best of 3
             /* Mutation Process */
@@ -514,7 +521,7 @@ function test() {
     let g = new Genetic();
     g.setInitPopulation();
     g.setHeuristicVal();
-    console.log(g.getBestGen());
+    g.evolution();
 }
 
 jQuery(
