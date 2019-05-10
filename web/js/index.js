@@ -285,6 +285,35 @@ class Genetic {
         // close to zero is the best
         return Math.abs( this.getGenCost(gen) - this.heuristicVal);
     }
+
+    getBestGen() {
+        let populationKeys = Object.keys(this.population);
+        let bestGenKey = populationKeys[0];
+        let bestGen = this.population[bestGenKey];
+        for (let index = 1; index < populationKeys.length; ++index) {
+            let currentGenKey = populationKeys[index];
+            let currentGen = this.population[currentGenKey];
+            if (this.fitness(currentGen) < this.fitness(bestGen)) {
+                bestGen = currentGen;
+            }
+        }
+        return bestGen;
+    }
+
+    evolution() {
+        this.setInitPopulation();
+        let periods = this.agentsKeys.length * this.ordersKeys.length;
+        for (let period = 0; period < periods; ++period) {
+            /* Selection Process */
+            let oldPopulation = this.population;
+            // getBestGen()
+            let newPopulation = {};
+            // get the half of best agents
+            /* Crossing Process */
+            // best of 3
+            /* Mutation Process */
+        }
+    }
 }
 
 /* UI */
@@ -483,7 +512,9 @@ function main() {
 
 function test() {
     let g = new Genetic();
+    g.setInitPopulation();
     g.setHeuristicVal();
+    console.log(g.getBestGen());
 }
 
 jQuery(
