@@ -142,6 +142,10 @@ class Data {
         };
     }
 
+    getServices() {
+        return this.services;
+    }
+
     setMaxAgentQuantToCreate(n) {
         this.maxAgentQuantToCreate = n;
     }
@@ -200,7 +204,67 @@ let data = new Data();
 
 class Genetic {
 
-    
+    constructor() {
+        this.population = {};
+        this.totalHours = 40;
+    }
+
+    getGenHours(gen) {
+        // param: gen = { service0 : quant0, service1 : quant1, ...}
+        let hours = 0;
+        let services = data.getServices();
+        let servicesKeys = Object.keys(gen);
+        for (let keyIndex = 0; keyIndex < servicesKeys.length; ++keyIndex) {
+            let key = servicesKeys[keyIndex];
+            // add gen hours
+            hours = hours + ( gen[key] * services[key].hours );
+        }
+        return hours;
+    }
+
+    getGenCost(gen) {
+        // param: gen = { service0 : quant0, service1 : quant1, ...}
+        let cost = 0;
+        let services = data.getServices();
+        let servicesKeys = Object.keys(gen);
+        for (let keyIndex = 0; keyIndex < servicesKeys.length; ++keyIndex) {
+            let key = servicesKeys[keyIndex];
+            // add gen hours
+            cost = cost + ( gen[key] * services[key].cost );
+        }
+        return cost;
+    }
+
+    setInitPopulation() {
+        let services = data.getServices();
+        let servicesKeys = Object.keys(services);
+        let agents = JSON.parse( sessionStorage.getItem("agentsJSON") );
+        let orders = JSON.parse( sessionStorage.getItem("ordersJSON") );
+        let agentsKeys = Object.keys(agents);
+        let ordersKeys = Object.keys(orders);
+        let genQuant = agentsKeys.length * ordersKeys.length;
+        for (let loop = 0; loop < genQuant; ++loop) {
+            let gen = {};
+            // all services start at 0
+            for (let keyIndex = 0; keyIndex < servicesKeys.length; ++keyIndex) {
+                let serviceKey = servicesKeys[keyIndex];
+                gen[serviceKey] = 0;
+            }
+            // increase services little by little
+            while (this.getGenHours(gen) <= this.totalHours) {
+                // pick random service
+                let randKeyIndex = faker.random.number() % (servicesKeys.length);
+                let serviceKey = servicesKeys[randKeyIndex];
+                gen[serviceKey] = gen[serviceKey] + 1;
+            }
+            let genUUID = "g" + faker.random.uuid();
+            this.population[genUUID] = gen;
+        }
+    }
+
+    getPopulation() {
+        this.population;
+    }
 }
 
 /* UI */
@@ -398,7 +462,7 @@ function main() {
 }
 
 function test() {
-    //console.log(data.createOrders());
+    let g = new Genetic();
 }
 
 jQuery(
