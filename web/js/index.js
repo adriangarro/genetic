@@ -317,6 +317,7 @@ class Genetic {
             }
             this.population = newPopulation;
             /* Crossing Process */
+            // TODO
             // best of 3
             /* Mutation Process */
         }
@@ -521,7 +522,7 @@ function test() {
     let g = new Genetic();
     g.setInitPopulation();
     g.setHeuristicVal();
-    g.evolution();
+    //g.evolution();
 }
 
 jQuery(
