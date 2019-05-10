@@ -263,8 +263,22 @@ class Genetic {
         return this.population;
     }
 
-    setHeuristicVal() {
+    getServiceKeyByCode(code) {
+        for (let index = 0; index < this.servicesKeys.length; ++index) {
+            let serviceKey =  this.servicesKeys[index];
+            if (this.services[serviceKey].code == code) return serviceKey;
+        }
+    }
 
+    setHeuristicVal() {
+        let cost = 0;
+        for (let index = 0; index < this.ordersKeys.length; ++index) {
+            let orderKey = this.ordersKeys[index];
+            let serviceCode = this.orders[orderKey].service;
+            let serviceKey = this.getServiceKeyByCode(serviceCode);
+            cost = cost + this.services[serviceKey].cost;
+        }
+        this.heuristicVal = cost;
     }
 }
 
@@ -464,8 +478,7 @@ function main() {
 
 function test() {
     let g = new Genetic();
-    g.setInitPopulation();
-    console.log(g.getPopulation());
+    g.setHeuristicVal();
 }
 
 jQuery(
