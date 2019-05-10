@@ -106,8 +106,8 @@ class Genetic {
 
     constructor() {
         // default values, user can change it
-        this.maxAgentQuant = 50;
-        this.maxOrderQuant = 200;
+        this.maxAgentQuantToCreate = 50;
+        this.maxOrderQuantToCreate = 200;
         this.services = {
             "s1" : {
                 "code" : "ICE", 
@@ -142,17 +142,17 @@ class Genetic {
         };
     }
 
-    setMaxAgentQuant(n) {
-        this.maxAgentQuant = n;
+    setMaxAgentQuantToCreate(n) {
+        this.maxAgentQuantToCreate = n;
     }
 
-    setMaxOrderQuant(n) {
-        this.maxOrderQuant = n;
+    setMaxOrderQuantToCreate(n) {
+        this.maxOrderQuantToCreate = n;
     }
 
     createAgents() {
         let agents = {};
-        for (let a = 0; a < this.maxAgentQuant; ++a) {
+        for (let a = 0; a < this.maxAgentQuantToCreate; ++a) {
             // take some services randomly
             let servicesKeys = Object.keys(this.services);
             let maxQuantOfKeys =  ( faker.random.number() % servicesKeys.length ) + 1;
@@ -179,7 +179,7 @@ class Genetic {
 
     createOrders() {
         let orders = {};
-        for (let o = 0; o < this.maxOrderQuant; ++o) {
+        for (let o = 0; o < this.maxOrderQuantToCreate; ++o) {
             // get random service
             let servicesKeys = Object.keys(this.services);
             let randKeyIndex = faker.random.number() % (servicesKeys.length);
@@ -195,6 +195,8 @@ class Genetic {
         return orders;
     }
 
+    // TODO
+
 }
 
 let gen = new Genetic();
@@ -202,6 +204,8 @@ let gen = new Genetic();
 /* UI */
 
 function setAgentsInTable(jsn) {
+    // clean table
+    $("#tblBodyAgents").empty();
     let count = 0;
     Object.keys(jsn).forEach(function(key) {
         let row = "<tr>"
@@ -219,6 +223,8 @@ function setAgentsInTable(jsn) {
 }
 
 function setOrdersInTable(jsn) {
+    // clean table
+    $("#tblBodyOrders").empty();
     let count = 0;
     Object.keys(jsn).forEach(function(key) {
         let row = "<tr>"
@@ -273,7 +279,9 @@ function loadJSON(htmlInputID) {
     $("#" + htmlInputID).change(function (event) {
         let reader = new FileReader();
         reader.onload = onReaderLoad;
-        reader.readAsText(event.target.files[0]);
+        if (event.target.files[0]) {
+            reader.readAsText(event.target.files[0]);
+        }
     });
 }
 
@@ -309,7 +317,10 @@ function main() {
                     // SET AGENTS QUANT
                     else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
-                            gen.setMaxAgentQuant( parseInt(command[1]) );
+                            gen.setMaxAgentQuantToCreate( parseInt(command[1]) );
+                            voiceProcessor.readOutLoud(
+                                "La cantidad de agentes para crear se ha cambiado a " + command[1]
+                            );
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
                         }
@@ -317,7 +328,10 @@ function main() {
                     // SET ORDERS QUANT
                     else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
-                            gen.setMaxOrderQuant( parseInt(command[1]) );
+                            gen.setMaxOrderQuantToCreate( parseInt(command[1]) );
+                            voiceProcessor.readOutLoud(
+                                "La cantidad de órdenes para crear se ha cambiado a " + command[1]
+                            );
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
                         }
@@ -325,17 +339,21 @@ function main() {
                     // CREATE FILE
                     else if (command[0] == "CREAR") {
                         if (command[1] == "AGENTES" || command[1] == "AGENTE") {
+                            $("#agentsJSON").val(null);
                             let jsn = gen.createAgents();
                             setAgentsInTable(jsn);
                             searchIn("searchAgent", "tblBodyAgents");
                             $("#seeAgentsDiv").show();
                             sessionStorage.setItem("agentsJSON", JSON.stringify(jsn));
+                            voiceProcessor.readOutLoud("Los agentes han sido creados.");
                         } else if (command[1] == "ORDENES" || command[1] == "ORDEN") {
+                            $("#ordersJSON").val(null);
                             let jsn = gen.createOrders();
                             setOrdersInTable(jsn);
                             searchIn("searchOrder", "tblBodyOrders");
                             $("#seeOrdersDiv").show();
                             sessionStorage.setItem("ordersJSON", JSON.stringify(jsn));
+                            voiceProcessor.readOutLoud("Las órdenes han sido creadas.");
                         } else {
                             voiceProcessor.readOutLoud("Comando no identificado.");
                         }
