@@ -194,12 +194,14 @@ class Data {
         }
         return orders;
     }
-
-    // TODO
-
 }
 
 let data = new Data();
+
+class Genetic {
+
+    
+}
 
 /* UI */
 
