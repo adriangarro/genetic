@@ -102,7 +102,7 @@ let voiceProcessor = new VoiceProcessor();
 
 /* GENETIC ALGORITHM */
 
-class Genetic {
+class Data {
 
     constructor() {
         // default values, user can change it
@@ -199,7 +199,7 @@ class Genetic {
 
 }
 
-let gen = new Genetic();
+let data = new Data();
 
 /* UI */
 
@@ -317,7 +317,7 @@ function main() {
                     // SET AGENTS QUANT
                     else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
-                            gen.setMaxAgentQuantToCreate( parseInt(command[1]) );
+                            data.setMaxAgentQuantToCreate( parseInt(command[1]) );
                             voiceProcessor.readOutLoud(
                                 "La cantidad de agentes para crear se ha cambiado a " + command[1]
                             );
@@ -328,7 +328,7 @@ function main() {
                     // SET ORDERS QUANT
                     else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
-                            gen.setMaxOrderQuantToCreate( parseInt(command[1]) );
+                            data.setMaxOrderQuantToCreate( parseInt(command[1]) );
                             voiceProcessor.readOutLoud(
                                 "La cantidad de órdenes para crear se ha cambiado a " + command[1]
                             );
@@ -340,7 +340,7 @@ function main() {
                     else if (command[0] == "CREAR") {
                         if (command[1] == "AGENTES" || command[1] == "AGENTE") {
                             $("#agentsJSON").val(null);
-                            let jsn = gen.createAgents();
+                            let jsn = data.createAgents();
                             setAgentsInTable(jsn);
                             searchIn("searchAgent", "tblBodyAgents");
                             $("#seeAgentsDiv").show();
@@ -348,7 +348,7 @@ function main() {
                             voiceProcessor.readOutLoud("Los agentes han sido creados.");
                         } else if (command[1] == "ORDENES" || command[1] == "ORDEN") {
                             $("#ordersJSON").val(null);
-                            let jsn = gen.createOrders();
+                            let jsn = data.createOrders();
                             setOrdersInTable(jsn);
                             searchIn("searchOrder", "tblBodyOrders");
                             $("#seeOrdersDiv").show();
@@ -396,7 +396,7 @@ function main() {
 }
 
 function test() {
-    //console.log(gen.createOrders());
+    //console.log(data.createOrders());
 }
 
 jQuery(
