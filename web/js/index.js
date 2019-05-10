@@ -280,6 +280,11 @@ class Genetic {
         }
         this.heuristicVal = cost;
     }
+
+    fitness(gen) {
+        // close to zero is the best
+        return Math.abs( this.getGenCost(gen) - this.heuristicVal);
+    }
 }
 
 /* UI */
