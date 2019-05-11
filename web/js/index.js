@@ -278,7 +278,7 @@ class Genetic {
             let serviceKey = this.getServiceKeyByCode(serviceCode);
             cost = cost + this.services[serviceKey].cost;
         }
-        this.heuristicVal = cost;
+        this.heuristicVal = cost / this.agentsKeys.length;
     }
 
     fitness(gen) {
@@ -304,7 +304,7 @@ class Genetic {
     evolution() {
         this.setInitPopulation();
         let periods = this.agentsKeys.length * this.ordersKeys.length;
-        for (let period = 0; period < periods; ++period) {
+        //for (let period = 0; period < periods; ++period) {
             /* Selection Process */
             let newPopulation = {};
             // get the half of best agents
@@ -320,7 +320,7 @@ class Genetic {
             // TODO
             // best of 3
             /* Mutation Process */
-        }
+        //}
     }
 }
 
@@ -522,7 +522,7 @@ function test() {
     let g = new Genetic();
     g.setInitPopulation();
     g.setHeuristicVal();
-    //g.evolution();
+    g.evolution();
 }
 
 jQuery(
