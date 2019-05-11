@@ -325,9 +325,12 @@ class Genetic {
     crossing() {
         let populationKeys = Object.keys(this.population);
         shuffle(populationKeys);
-        // TODO pair loop
-        // best of 3
-
+        for (let i = 0; i < populationKeys.length - 1; ++i) {
+            // genA
+            // gen B
+            // for service, cross in genC
+            // best of 3
+        }
     }
 
     mutation() {
