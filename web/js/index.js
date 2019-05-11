@@ -221,6 +221,7 @@ class Genetic {
         this.ordersKeys = Object.keys(this.orders);
         this.population = {};
         this.totalHours = 34;
+        this.totalHoursFixed = 40;
         this.heuristicVal = 0;
     }
 
@@ -287,6 +288,7 @@ class Genetic {
             cost = cost + this.services[serviceKey].cost;
         }
         this.heuristicVal = cost / this.agentsKeys.length;
+        //console.log("H:" + this.heuristicVal);
     }
 
     fitness(gen) {
@@ -323,25 +325,104 @@ class Genetic {
     }
 
     crossing() {
+        let crossingCount = 0;
         let populationKeys = Object.keys(this.population);
         shuffle(populationKeys);
-        for (let i = 0; i < populationKeys.length - 1; ++i) {
+        for (let genIndex = 0; genIndex < (populationKeys.length - 1); ++genIndex) {
             // genA
+            let genAKey = populationKeys[genIndex];
+            let genA = this.population[genAKey];
             // gen B
-            // for service, cross in genC
-            // best of 3
+            let genBKey = populationKeys[genIndex + 1];
+            let genB = this.population[genBKey];
+            // crossing genA and genB into genC
+            let genC = {};
+            for (let serviceIndex = 0; serviceIndex < this.servicesKeys.length; ++serviceIndex) {
+                let serviceKey = this.servicesKeys[serviceIndex];
+                let randChoice = Math.random();
+                if (randChoice <= 0.5) {
+                    genC[serviceKey] = genA[serviceKey];
+                } else {
+                    genC[serviceKey] = genB[serviceKey];
+                }
+            }
+            // get best pair of three (genA, genB, genC)
+            if ( this.fitness(genC) < this.fitness(genA) ) {
+                if ( this.getGenHours(genC) <= this.totalHoursFixed )
+                    //this.printGen(genC); 
+                    crossingCount = crossingCount + 1;
+                    this.population[genAKey] = genC;
+            } else if ( this.fitness(genC) < this.fitness(genB) ) {
+                if ( this.getGenHours(genC) <= this.totalHoursFixed )
+                    //this.printGen(genC); 
+                    crossingCount = crossingCount + 1;
+                    this.population[genBKey] = genC;
+            }
         }
+        //console.log(crossingCount);
     }
 
     mutation() {
+        let populationKeys = Object.keys(this.population);
+        let genXKey = populationKeys[Math.floor ( Math.random() * populationKeys.length )];
+        let genX = this.population[genXKey];
+        let mutationFactor = Math.random();
+        if (mutationFactor <= 0.1) {
+            let randServiceKey = this.servicesKeys[
+                Math.floor ( Math.random() * this.servicesKeys.length )
+            ];
+            let mutationTypeFactor = Math.random();
+            /* change service demand */
+            // increase demand
+            if (mutationTypeFactor <= 0.5) {
+                genX[randServiceKey] = genX[randServiceKey] + 1;
+            } 
+            // swap demand
+            else {
+                let anotherRandServiceKey = this.servicesKeys[
+                    Math.floor ( Math.random() * this.servicesKeys.length )
+                ];
+                let temp = genX[anotherRandServiceKey];
+                genX[anotherRandServiceKey] = genX[randServiceKey];
+                genX[randServiceKey] = temp;
+            }
+            // apply only a good one mutation
+            if (this.getGenHours(genX) <= this.totalHoursFixed) {
+                this.population[genXKey] = genX;
+                //this.printGen(genX);
+            }
+        }
+    }
 
+    printGen(gen) {
+        console.log("Gen: ");
+        console.log(gen);
+        console.log("Hours: " + this.getGenHours(gen));
+        console.log("Cost: " + this.getGenCost(gen));
+    }
+
+    printPopulation() {
+        let populationKeys = Object.keys(this.population);
+        console.log("N:" + populationKeys.length);
+        for (let i = 0; i < populationKeys.length; ++i) {
+            let key = populationKeys[i];
+            let gen = this.population[key];
+            this.printGen(gen);
+        }
     }
 
     evolution() {
         this.setInitPopulation();
+        this.setHeuristicVal();
         let periods = this.agentsKeys.length * this.ordersKeys.length;
         //for (let period = 0; period < periods; ++period) {
+                //this.printPopulation();
             this.selection();
+                //this.printPopulation();
+            this.crossing();
+                //this.printPopulation();
+            this.mutation();
+                //this.printPopulation()
         //}
     }
 }
@@ -541,10 +622,8 @@ function main() {
 }
 
 function test() {
-    /*let g = new Genetic();
-    g.setInitPopulation();
-    g.setHeuristicVal();*/
-    //g.evolution();
+    let g = new Genetic();
+    g.evolution();
 }
 
 jQuery(
