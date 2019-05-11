@@ -102,6 +102,14 @@ let voiceProcessor = new VoiceProcessor();
 
 /* GENETIC ALGORITHM */
 
+function shuffle(array) {
+    // Fisher–Yates Algorithm
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 class Data {
 
     constructor() {
@@ -301,25 +309,36 @@ class Genetic {
         return bestGenKey;
     }
 
+    selection() {
+        let newPopulation = {};
+        // get the half of best agents
+        // half of the population xD
+        let thanosSnapQuant = Object.keys(this.population).length / 2;
+        for (let survivorQuant = 0; survivorQuant < thanosSnapQuant; ++survivorQuant) {
+            let survivorKey = this.getBestGenKey();
+            newPopulation[survivorKey] = this.population[survivorKey];
+            delete this.population[survivorKey];
+        }
+        this.population = newPopulation;
+    }
+
+    crossing() {
+        let populationKeys = Object.keys(this.population);
+        shuffle(populationKeys);
+        // TODO pair loop
+        // best of 3
+
+    }
+
+    mutation() {
+
+    }
+
     evolution() {
         this.setInitPopulation();
         let periods = this.agentsKeys.length * this.ordersKeys.length;
         //for (let period = 0; period < periods; ++period) {
-            /* Selection Process */
-            let newPopulation = {};
-            // get the half of best agents
-            // half of the population xD
-            let thanosSnapQuant = Object.keys(this.population).length / 2;
-            for (let survivorQuant = 0; survivorQuant < thanosSnapQuant; ++survivorQuant) {
-                let survivorKey = this.getBestGenKey();
-                newPopulation[survivorKey] = this.population[survivorKey];
-                delete this.population[survivorKey];
-            }
-            this.population = newPopulation;
-            /* Crossing Process */
-            // TODO
-            // best of 3
-            /* Mutation Process */
+            this.selection();
         //}
     }
 }
@@ -519,9 +538,9 @@ function main() {
 }
 
 function test() {
-    let g = new Genetic();
+    /*let g = new Genetic();
     g.setInitPopulation();
-    g.setHeuristicVal();
+    g.setHeuristicVal();*/
     //g.evolution();
 }
 
