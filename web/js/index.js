@@ -522,7 +522,7 @@ function test() {
     let g = new Genetic();
     g.setInitPopulation();
     g.setHeuristicVal();
-    g.evolution();
+    //g.evolution();
 }
 
 jQuery(
