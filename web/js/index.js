@@ -223,6 +223,7 @@ class Genetic {
         this.totalHours = 34;
         this.totalHoursFixed = 40;
         this.heuristicVal = 0;
+        this.survivorsPercentage = 0.25;
     }
 
     getGenHours(gen) {
@@ -418,8 +419,7 @@ class Genetic {
     evolution() {
         this.setInitPopulation();
         this.setHeuristicVal();
-        console.log(this.heuristicVal);
-        let survivors = this.getPopulationQuant() * 0.25;
+        let survivors = this.getPopulationQuant() * this.survivorsPercentage;
         while (this.getPopulationQuant() > survivors && this.agentsKeys.length < survivors) {
             //this.printPopulation();
             this.selection();
