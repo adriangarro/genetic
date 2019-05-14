@@ -454,12 +454,11 @@ class Genetic {
         let survivors = this.getPopulationQuant() * this.survivorsPercentage;
         while (this.getPopulationQuant() > survivors) {
             //this.printPopulation();
-            this.selection();
-            //this.printPopulation();
             this.crossing();
             //this.printPopulation();
             this.mutation();
             //this.printPopulation()
+            this.selection();
         }
         this.printPopulation();
     }
