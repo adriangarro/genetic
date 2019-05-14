@@ -449,6 +449,7 @@ class Genetic {
     areCompatible(agent, gen) {
         let agentServices = agent.services;
         let genServicesKeys = Object.keys(gen);
+        // for every service in gene
         for (let i = 0; i < genServicesKeys.length; ++i) {
             let serviceKey = genServicesKeys[i];
             let service = this.services[serviceKey];
