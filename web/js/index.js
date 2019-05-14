@@ -431,6 +431,32 @@ class Genetic {
         }
         this.printPopulation();
     }
+
+    setServiceQuantInOrders() {
+        for (let serviceKeyIndex = 0; serviceKeyIndex < this.servicesKeys.length; ++serviceKeyIndex) {
+            let serviceKey = this.servicesKeys[serviceKeyIndex];
+            let service = this.services[serviceKey];
+            service["demand"] = 0;
+            for (let orderKeyIndex = 0; orderKeyIndex < this.ordersKeys.length; ++orderKeyIndex) {
+                let orderKey = this.ordersKeys[orderKeyIndex];
+                let order = this.orders[orderKey];
+                if (service.code == order.service) {
+                    service["demand"] = service["demand"] + 1;
+                }
+            }
+        }
+    }
+
+    // TODO: test
+    agentMatchGen(agent, gen) {
+        // for serviceCode in agentServices
+        // if gen[this.getServiceKeyByCode(serviceCode)] == 0 return false;
+        // return true;
+    }
+
+    distribution() {
+        this.setServiceQuantInOrders();
+    }
 }
 
 /* UI */
