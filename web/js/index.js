@@ -325,7 +325,6 @@ class Genetic {
     }
 
     crossing() {
-        let crossingCount = 0;
         let populationKeys = Object.keys(this.population);
         shuffle(populationKeys);
         for (let genIndex = 0; genIndex < (populationKeys.length - 1); ++genIndex) {
@@ -346,20 +345,21 @@ class Genetic {
                     genC[serviceKey] = genB[serviceKey];
                 }
             }
-            // get best pair of three (genA, genB, genC)
-            if ( this.fitness(genC) < this.fitness(genA) ) {
-                if ( this.getGenHours(genC) <= this.totalHoursFixed )
-                    //this.printGen(genC); 
-                    crossingCount = crossingCount + 1;
-                    this.population[genAKey] = genC;
-            } else if ( this.fitness(genC) < this.fitness(genB) ) {
-                if ( this.getGenHours(genC) <= this.totalHoursFixed )
-                    //this.printGen(genC); 
-                    crossingCount = crossingCount + 1;
-                    this.population[genBKey] = genC;
+            // is genC good?
+            if ( this.getGenHours(genC) <= this.totalHoursFixed ) {
+                let gens = [genA, genB, genC];
+                // sort gens by fitness in ascending order:
+                gens.sort((a, b) => this.fitness(a) - this.fitness(b));
+                // get best 2 of [genA, genB, genC]
+                // gettig them in a random way:
+                let zeroOrOne = Math.round( Math.random() );
+                this.population[genAKey] = gens[zeroOrOne];
+                if (zeroOrOne == 0)
+                    this.population[genBKey] = gens[1];
+                else
+                    this.population[genBKey] = gens[0];
             }
         }
-        //console.log(crossingCount);
     }
 
     mutation() {
@@ -411,19 +411,25 @@ class Genetic {
         }
     }
 
+    getPopulationQuant() {
+        return Object.keys(this.population).length;
+    }
+
     evolution() {
         this.setInitPopulation();
         this.setHeuristicVal();
-        let periods = this.agentsKeys.length * this.ordersKeys.length;
-        //for (let period = 0; period < periods; ++period) {
-                //this.printPopulation();
+        console.log(this.heuristicVal);
+        let survivors = this.getPopulationQuant() * 0.25;
+        while (this.getPopulationQuant() > survivors && this.agentsKeys.length < survivors) {
+            //this.printPopulation();
             this.selection();
-                //this.printPopulation();
+            //this.printPopulation();
             this.crossing();
-                //this.printPopulation();
+            //this.printPopulation();
             this.mutation();
-                //this.printPopulation()
-        //}
+            //this.printPopulation()
+        }
+        this.printPopulation();
     }
 }
 
