@@ -325,6 +325,38 @@ class Genetic {
         this.population = newPopulation;
     }
 
+    areCompatible(agent, gen) {
+        let agentServices = agent.services;
+        let genServicesKeys = Object.keys(gen);
+        for (let i = 0; i < genServicesKeys.length; ++i) {
+            let serviceKey = genServicesKeys[i];
+            let service = this.services[serviceKey];
+            let serviceQuantInGen = gen[serviceKey];
+            if (!agentServices.hasOwnProperty(service.code) && serviceQuantInGen > 0)
+                return false;
+        }
+        return true;
+    }
+
+    selection2() {
+        let newPopulation = {};
+        // for every agent...
+        for (let i = 0; i < this.agentsKeys.length; ++i) {
+            let agentKey = this.agentsKeys[i];
+            let agent = this.agents[agentKey];
+            agent["gens"] = {};
+            let populationKeys = Object.keys(this.population);
+            // for every gen...
+            for (let j = 0; j < populationKeys.length; ++j) {
+                let genKey = populationKeys[j];
+                let gen = this.population[genKey];
+                if (this.areCompatible(agent, gen))
+                    newPopulation[genKey] = this.population[genKey];
+            } 
+        }
+        this.population = newPopulation;
+    }
+
     crossing() {
         let populationKeys = Object.keys(this.population);
         shuffle(populationKeys);
@@ -420,7 +452,7 @@ class Genetic {
         this.setInitPopulation();
         this.setHeuristicVal();
         let survivors = this.getPopulationQuant() * this.survivorsPercentage;
-        while (this.getPopulationQuant() > survivors && this.agentsKeys.length < survivors) {
+        while (this.getPopulationQuant() > survivors) {
             //this.printPopulation();
             this.selection();
             //this.printPopulation();
@@ -447,15 +479,27 @@ class Genetic {
         }
     }
 
-    // TODO: test
-    agentMatchGen(agent, gen) {
-        // for serviceCode in agentServices
-        // if gen[this.getServiceKeyByCode(serviceCode)] == 0 return false;
-        // return true;
+    agentMatchGens() {
+        // for every agent...
+        for (let i = 0; i < this.agentsKeys.length; ++i) {
+            let agentKey = this.agentsKeys[i];
+            let agent = this.agents[agentKey];
+            agent["gens"] = {};
+            let populationKeys = Object.keys(this.population);
+            // for every gen...
+            for (let j = 0; j < populationKeys.length; ++j) {
+                let genKey = populationKeys[j];
+                let gen = this.population[genKey];
+                if (this.areCompatible(agent, gen))
+                agent["gens"][genKey] = true;
+            } 
+        }
     }
 
     distribution() {
         this.setServiceQuantInOrders();
+        this.agentMatchGens();
+        console.log(this.agents);
     }
 }
 
@@ -656,6 +700,7 @@ function main() {
 function test() {
     let g = new Genetic();
     g.evolution();
+    g.distribution()
 }
 
 jQuery(
