@@ -480,6 +480,7 @@ class Genetic {
         this.setServiceQuantInOrders();
         this.agentMatchGens();
         console.log(this.agents);
+        // TODO final list
     }
 }
 
