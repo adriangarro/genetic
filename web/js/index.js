@@ -325,38 +325,6 @@ class Genetic {
         this.population = newPopulation;
     }
 
-    areCompatible(agent, gen) {
-        let agentServices = agent.services;
-        let genServicesKeys = Object.keys(gen);
-        for (let i = 0; i < genServicesKeys.length; ++i) {
-            let serviceKey = genServicesKeys[i];
-            let service = this.services[serviceKey];
-            let serviceQuantInGen = gen[serviceKey];
-            if (!agentServices.hasOwnProperty(service.code) && serviceQuantInGen > 0)
-                return false;
-        }
-        return true;
-    }
-
-    selection2() {
-        let newPopulation = {};
-        // for every agent...
-        for (let i = 0; i < this.agentsKeys.length; ++i) {
-            let agentKey = this.agentsKeys[i];
-            let agent = this.agents[agentKey];
-            agent["gens"] = {};
-            let populationKeys = Object.keys(this.population);
-            // for every gen...
-            for (let j = 0; j < populationKeys.length; ++j) {
-                let genKey = populationKeys[j];
-                let gen = this.population[genKey];
-                if (this.areCompatible(agent, gen))
-                    newPopulation[genKey] = this.population[genKey];
-            } 
-        }
-        this.population = newPopulation;
-    }
-
     crossing() {
         let populationKeys = Object.keys(this.population);
         shuffle(populationKeys);
@@ -476,6 +444,19 @@ class Genetic {
                 }
             }
         }
+    }
+
+    areCompatible(agent, gen) {
+        let agentServices = agent.services;
+        let genServicesKeys = Object.keys(gen);
+        for (let i = 0; i < genServicesKeys.length; ++i) {
+            let serviceKey = genServicesKeys[i];
+            let service = this.services[serviceKey];
+            let serviceQuantInGen = gen[serviceKey];
+            if (!agentServices.hasOwnProperty(service.code) && serviceQuantInGen > 0)
+                return false;
+        }
+        return true;
     }
 
     agentMatchGens() {
