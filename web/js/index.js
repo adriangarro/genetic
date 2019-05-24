@@ -224,6 +224,7 @@ class Genetic {
         this.totalHoursFixed = 40;
         this.heuristicVal = 0;
         this.survivorsPercentage = 0.25;
+        this.matchedGens = [];
     }
 
     getGenHours(gen) {
@@ -461,6 +462,8 @@ class Genetic {
     }
 
     agentMatchGens() {
+        // clean matched gens
+        this.matchedGens = [];
         // for every agent...
         for (let i = 0; i < this.agentsKeys.length; ++i) {
             let agentKey = this.agentsKeys[i];
@@ -471,14 +474,16 @@ class Genetic {
             for (let j = 0; j < populationKeys.length; ++j) {
                 let genKey = populationKeys[j];
                 let gen = this.population[genKey];
-                if (this.areCompatible(agent, gen))
-                agent["gens"][genKey] = true;
+                if (this.areCompatible(agent, gen)) {
+                    agent["gens"][genKey] = true;
+                    this.matchedGens.push(genKey);
+                }
             } 
         }
     }
 
-    // get all matched gens
     // general: compute service demand of these gens
+    
     // create little by little a gen group where the demand of these gens 
     // be similar to original 
 
