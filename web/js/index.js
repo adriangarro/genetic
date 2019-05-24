@@ -477,8 +477,14 @@ class Genetic {
         }
     }
 
+    // get all matched gens
+    // general: compute service demand of these gens
+    // create little by little a gen group where the demand of these gens 
+    // be similar to original 
+
     distribution() {
         this.setServiceQuantInOrders();
+        console.log(this.services);
         this.agentMatchGens();
         console.log(this.agents);
         // TODO final list
