@@ -480,19 +480,45 @@ class Genetic {
                 }
             } 
         }
+        // delete repeated elements...
+        this.matchedGens = [...new Set(this.matchedGens)];
     }
 
-    // general: compute service demand of these gens
-    
-    // create little by little a gen group where the demand of these gens 
-    // be similar to original 
+    // compute service demand of gens
+    demand(gensArr) {
+        let demand = {};
+        for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
+            let key = this.servicesKeys[keyIndex];
+            demand[key] = 0;
+        }
+        for (let i = 0; i < gensArr.length; ++i) {
+            let genKey = gensArr[i];
+            let gen = this.population[genKey];
+            for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
+                let key = this.servicesKeys[keyIndex];
+                demand[key] = demand[key] + gen[key];
+            }
+        }
+        return demand;
+    }
+
+    fitnessByDemand(demand) {
+        let result = 0;
+        for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
+            let key = this.servicesKeys[keyIndex];
+            result = result + Math.abs(demand[key] - this.services[key]["demand"]);
+        }
+        return result;
+    }
+
+    // TODO create little by little a gen group where fitness be close to zero
 
     distribution() {
         this.setServiceQuantInOrders();
         console.log(this.services);
         this.agentMatchGens();
         console.log(this.agents);
-        // TODO final list
+        console.log( this.fitnessByDemand(this.demand(this.matchedGens)) );
     }
 }
 
