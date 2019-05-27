@@ -502,23 +502,41 @@ class Genetic {
         return demand;
     }
 
-    fitnessByDemand(demand) {
+    fitnessByDemand(genKeys) {
+        let demand = this.demand(genKeys);
         let result = 0;
+        // for every service...
         for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
             let key = this.servicesKeys[keyIndex];
-            result = result + Math.abs(demand[key] - this.services[key]["demand"]);
+            result = result + (this.services[key]["demand"] - demand[key]);
         }
         return result;
     }
 
-    // TODO create little by little a gen group where fitness be close to zero
+    buildSolutions() {
+        shuffle(this.matchedGens);
+        let solutions = [];
+        while (solutions.length < this.agentsKeys.length) {
+            let genKey = this.matchedGens[Math.floor(Math.random() * this.matchedGens.length)];
+            if (!solutions.includes(genKey)) solutions.push(genKey);
+        }
+        // remove randoms gens until fitness will be positive
+        // zero is the optimal
+        while ( this.fitnessByDemand(solutions) < 0 ) {
+            solutions.splice(Math.floor(Math.random() * solutions.length), 1);
+        }
+        return solutions;
+    }
+
+    
 
     distribution() {
         this.setServiceQuantInOrders();
         console.log(this.services);
         this.agentMatchGens();
         console.log(this.agents);
-        console.log( this.fitnessByDemand(this.demand(this.matchedGens)) );
+        console.log( this.matchedGens );
+        console.log( this.fitnessByDemand(this.buildSolutions()) );
     }
 }
 
