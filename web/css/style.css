@@ -908,3 +908,11 @@ a.tooltip:hover::before {
     opacity: 1;
     bottom: -35px;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 65%;
+    height: 65%; 
+}

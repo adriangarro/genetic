@@ -471,7 +471,7 @@ class Genetic {
             let agent = this.agents[agentKey];
             agent["gens"] = {};
             let populationKeys = Object.keys(this.population);
-            // for every gen...
+            // for every gene...
             for (let j = 0; j < populationKeys.length; ++j) {
                 let genKey = populationKeys[j];
                 let gen = this.population[genKey];
@@ -545,15 +545,15 @@ class Genetic {
 
     distribution() {
         this.setServiceQuantInOrders();
-        //console.log(this.services);
+        // console.log(this.services);
         this.agentMatchGens();
-        //console.log(this.agents);
-        //console.log( this.matchedGens );
+        // console.log(this.agents);
+        // console.log( this.matchedGens );
         this.buildSolutions();
-        //console.log(this.solutions);
-        //console.log( this.fitnessByDemand(this.solutions) );
+        // console.log(this.solutions);
+        // console.log( this.fitnessByDemand(this.solutions) );
         this.agentMatchSolution();
-        //console.log(this.agents);
+        // console.log(this.agents);
     }
 }
 
@@ -752,6 +752,7 @@ function main() {
 }
 
 function test() {
+    $("#dna").modal("show");
     let g = new Genetic();
     g.evolution();
     g.distribution()
