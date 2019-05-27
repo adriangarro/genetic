@@ -430,7 +430,7 @@ class Genetic {
             // this.printPopulation()
             this.selection();
         }
-        this.printPopulation();
+        // this.printPopulation();
     }
 
     setServiceQuantInOrders() {
@@ -529,29 +529,31 @@ class Genetic {
     }
 
     agentMatchSolution() {
-        // for every agent...
-        for (let i = 0; i < this.agentsKeys.length; ++i) {
-            let agentKey = this.agentsKeys[i];
-            let agent = this.agents[agentKey];
-            // for every solution...
-            for (let j = 0; j < this.solutions.length; ++j) {
-                let genKey = this.solutions[j];
-                let genSolution = this.population[genKey];
-                // if agent includes gen solution
-                //agent["gens"]
-            } 
+        // for every solution...
+        for (let j = 0; j < this.solutions.length; ++j) {
+            let genKey = this.solutions[j];
+            // for every agent...
+            for (let i = 0; i < this.agentsKeys.length; ++i) {
+                let agentKey = this.agentsKeys[i];
+                let agent = this.agents[agentKey];
+                if (agent["gens"][genKey]) {
+                    agent["gens"][genKey] = "ok";
+                }
+            }
         }
     }
 
     distribution() {
         this.setServiceQuantInOrders();
-        console.log(this.services);
+        //console.log(this.services);
         this.agentMatchGens();
-        console.log(this.agents);
-        console.log( this.matchedGens );
+        //console.log(this.agents);
+        //console.log( this.matchedGens );
         this.buildSolutions();
-        console.log(this.solutions);
-        console.log( this.fitnessByDemand(this.solutions) );
+        //console.log(this.solutions);
+        //console.log( this.fitnessByDemand(this.solutions) );
+        this.agentMatchSolution();
+        //console.log(this.agents);
     }
 }
 
