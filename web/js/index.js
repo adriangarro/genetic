@@ -225,6 +225,7 @@ class Genetic {
         this.heuristicVal = 0;
         this.survivorsPercentage = 0.25;
         this.matchedGens = [];
+        this.solutions = [];
     }
 
     getGenHours(gen) {
@@ -290,7 +291,7 @@ class Genetic {
             cost = cost + this.services[serviceKey].cost;
         }
         this.heuristicVal = cost / this.agentsKeys.length;
-        //console.log("H:" + this.heuristicVal);
+        // console.log("H:" + this.heuristicVal);
     }
 
     fitness(gen) {
@@ -391,7 +392,7 @@ class Genetic {
             // apply only a good one mutation
             if (this.getGenHours(genX) <= this.totalHoursFixed) {
                 this.population[genXKey] = genX;
-                //this.printGen(genX);
+                // this.printGen(genX);
             }
         }
     }
@@ -422,11 +423,11 @@ class Genetic {
         this.setHeuristicVal();
         let survivors = this.getPopulationQuant() * this.survivorsPercentage;
         while (this.getPopulationQuant() > survivors) {
-            //this.printPopulation();
+            // this.printPopulation();
             this.crossing();
-            //this.printPopulation();
+            // this.printPopulation();
             this.mutation();
-            //this.printPopulation()
+            // this.printPopulation()
             this.selection();
         }
         this.printPopulation();
@@ -450,7 +451,7 @@ class Genetic {
     areCompatible(agent, gen) {
         let agentServices = agent.services;
         let genServicesKeys = Object.keys(gen);
-        // for every service in gene
+        // for every service in gene...
         for (let i = 0; i < genServicesKeys.length; ++i) {
             let serviceKey = genServicesKeys[i];
             let service = this.services[serviceKey];
@@ -484,7 +485,7 @@ class Genetic {
         this.matchedGens = [...new Set(this.matchedGens)];
     }
 
-    // compute service demand of gens
+    // get service demand of a genes array
     demand(gensArr) {
         let demand = {};
         for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
@@ -515,20 +516,32 @@ class Genetic {
 
     buildSolutions() {
         shuffle(this.matchedGens);
-        let solutions = [];
-        while (solutions.length < this.agentsKeys.length) {
+        this.solutions = [];
+        while (this.solutions.length < this.agentsKeys.length) {
             let genKey = this.matchedGens[Math.floor(Math.random() * this.matchedGens.length)];
-            if (!solutions.includes(genKey)) solutions.push(genKey);
+            if (!this.solutions.includes(genKey)) this.solutions.push(genKey);
         }
         // remove randoms gens until fitness will be positive
         // zero is the optimal
-        while ( this.fitnessByDemand(solutions) < 0 ) {
-            solutions.splice(Math.floor(Math.random() * solutions.length), 1);
+        while ( this.fitnessByDemand(this.solutions) < 0 ) {
+            this.solutions.splice(Math.floor(Math.random() * this.solutions.length), 1);
         }
-        return solutions;
     }
 
-    
+    agentMatchSolution() {
+        // for every agent...
+        for (let i = 0; i < this.agentsKeys.length; ++i) {
+            let agentKey = this.agentsKeys[i];
+            let agent = this.agents[agentKey];
+            // for every solution...
+            for (let j = 0; j < this.solutions.length; ++j) {
+                let genKey = this.solutions[j];
+                let genSolution = this.population[genKey];
+                // if agent includes gen solution
+                //agent["gens"]
+            } 
+        }
+    }
 
     distribution() {
         this.setServiceQuantInOrders();
@@ -536,7 +549,9 @@ class Genetic {
         this.agentMatchGens();
         console.log(this.agents);
         console.log( this.matchedGens );
-        console.log( this.fitnessByDemand(this.buildSolutions()) );
+        this.buildSolutions();
+        console.log(this.solutions);
+        console.log( this.fitnessByDemand(this.solutions) );
     }
 }
 
