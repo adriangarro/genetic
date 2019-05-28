@@ -768,6 +768,9 @@ function main() {
                             voiceProcessor.readOutLoud("Comando no identificado.");
                         }
                     }
+                    else if (command[0] == "CORRER") {
+                        // TODO
+                    }
                     else {
                         voiceProcessor.readOutLoud("Comando no identificado.");
                     }
@@ -787,6 +790,7 @@ function runGeneticAlgorithm() {
         g.distribution();
         $("#dna").modal("hide");
         // TODO table with Sols
+
     }, 5000);
 }
 
