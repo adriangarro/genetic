@@ -689,10 +689,16 @@ function main() {
                     // SET AGENTS QUANT
                     else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
-                            data.setMaxAgentQuantToCreate( parseInt(command[1]) );
-                            voiceProcessor.readOutLoud(
-                                "La cantidad de agentes para crear se ha cambiado a " + command[1]
-                            );
+                            let agentQuant = parseInt(command[1]);
+                            // TODO max
+                            if (agentQuant >= 20) {
+                                data.setMaxAgentQuantToCreate( agentQuant );
+                                voiceProcessor.readOutLoud(
+                                    "La cantidad de agentes para crear se ha cambiado a " + command[1]
+                                );
+                            } else {
+                                voiceProcessor.readOutLoud("La cantidad de agentes debe ser mayor a veinte.");
+                            }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
                         }
@@ -700,10 +706,16 @@ function main() {
                     // SET ORDERS QUANT
                     else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
-                            data.setMaxOrderQuantToCreate( parseInt(command[1]) );
-                            voiceProcessor.readOutLoud(
-                                "La cantidad de órdenes para crear se ha cambiado a " + command[1]
-                            );
+                            let orderQuant = parseInt(command[1]);
+                            // TODO max
+                            if (orderQuant >= 10) {
+                                data.setMaxOrderQuantToCreate( orderQuant );
+                                voiceProcessor.readOutLoud(
+                                    "La cantidad de órdenes para crear se ha cambiado a " + command[1]
+                                );
+                            } else {
+                                voiceProcessor.readOutLoud("La cantidad de órdenes debe ser mayor a diez.");
+                            }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
                         }
