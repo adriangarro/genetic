@@ -228,6 +228,22 @@ class Genetic {
         this.solutions = [];
     }
 
+    getServices() {
+        return this.services;
+    }
+
+    getAgents() {
+        return this.agents;
+    }
+
+    getAgents() {
+        return this.orders;
+    }
+
+    getGens() {
+        return this.population;
+    }
+
     getGenHours(gen) {
         // param: gen = { service0 : quant0, service1 : quant1, ...}
         let hours = 0;
@@ -753,9 +769,13 @@ function main() {
 
 function test() {
     $("#dna").modal("show");
-    let g = new Genetic();
-    g.evolution();
-    g.distribution()
+    setTimeout(function() {
+        let g = new Genetic();
+        g.evolution();
+        g.distribution();
+        $("#dna").modal("hide");
+        // TODO table with Sols
+    }, 5000);
 }
 
 jQuery(
