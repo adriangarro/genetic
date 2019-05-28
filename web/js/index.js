@@ -779,7 +779,7 @@ function main() {
     });
 }
 
-function test() {
+function runGeneticAlgorithm() {
     $("#dna").modal("show");
     setTimeout(function() {
         let g = new Genetic();
@@ -796,6 +796,6 @@ jQuery(
         loadJSON("ordersJSON"),
         controlModalTables(),
         main(),
-        test()
+        runGeneticAlgorithm()
     })
 );
