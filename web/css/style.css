@@ -163,6 +163,10 @@ Banner
     margin-top: 30px;
 }
 
+.modal {
+    overflow-y: scroll;
+}
+
 .modal-dialog {
     width: 600px;
     margin: 150px auto;

@@ -236,7 +236,7 @@ class Genetic {
         return this.agents;
     }
 
-    getAgents() {
+    getOrders() {
         return this.orders;
     }
 
@@ -666,6 +666,18 @@ function controlModalTables() {
     });
 }
 
+function setSolutionsInTable(agents) {
+    // clean table
+    $("#tblBodySolutions").empty();
+    Object.keys(agents).forEach(function(key) {
+        let row = "<tr>"
+            + "<td>" + key + "</td>"
+            + "<td>" + agents[key].name + "</td>"
+            + "</tr>";
+        $(row).appendTo("#tblBodySolutions");
+    });
+}
+
 function main() {
     $(document).on("keypress", function(e) {
         // if press 1
@@ -790,7 +802,9 @@ function runGeneticAlgorithm() {
         g.distribution();
         $("#dna").modal("hide");
         // TODO table with Sols
-
+        setSolutionsInTable(g.getAgents());
+        //searchIn("searchAgent", "tblBodyAgents");
+        $("#consultSolutions").modal("show");
     }, 5000);
 }
 
