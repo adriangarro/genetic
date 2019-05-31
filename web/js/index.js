@@ -223,7 +223,7 @@ class Genetic {
         this.totalHours = 34;
         this.totalHoursFixed = 40;
         this.heuristicVal = 0;
-        this.survivorsPercentage = 0.25;
+        this.survivorsPercentage = 0.125;
         this.matchedGens = [];
         this.solutions = [];
     }
@@ -535,7 +535,7 @@ class Genetic {
         return demand;
     }
 
-    fitnessByDemand(genKeys) {
+    /*fitnessByDemand(genKeys) {
         let demand = this.demand(genKeys);
         let result = 0;
         // for every service...
@@ -544,9 +544,9 @@ class Genetic {
             result = result + this.services[key]["demand"] - demand[key];
         }
         return result;
-    }
+    }*/
 
-    buildSolutions() {
+    /*buildSolutions() {
         shuffle(this.matchedGens);
         this.solutions = [];
         while (this.solutions.length < this.agentsKeys.length) {
@@ -555,16 +555,19 @@ class Genetic {
         }
         // remove randoms gens until fitness will be positive
         // zero is the optimal
-        /*while ( this.fitnessByDemand(this.solutions) < 0 ) {
+        while ( this.fitnessByDemand(this.solutions) < 0 ) {
             this.solutions.splice(Math.floor(Math.random() * this.solutions.length), 1);
-        }*/
-    }
+        }
+    }*/
 
     agentMatchSolution() {
         let agentKeys = this.agentsKeys;
+        this.matchedGens.sort((a, b) => this.getGenCostByKey(a) - this.getGenCostByKey(b));
+        // complete demand
+
         // for every solution...
-        for (let j = 0; j < this.solutions.length; ++j) {
-            let genKey = this.solutions[j];
+        for (let j = 0; j < this.matchedGens.length; ++j) {
+            let genKey = this.matchedGens[j];
             // for every agent...
             shuffle(agentKeys);
             for (let i = 0; i < agentKeys.length; ++i) {
@@ -585,8 +588,10 @@ class Genetic {
         // console.log(this.services);
         this.agentMatchGens();
         // console.log(this.agents);
-        // console.log( this.matchedGens );
-        this.buildSolutions();
+        console.log( this.matchedGens );
+
+        //this.buildSolutions();
+
         // console.log(this.solutions);
         // console.log( this.fitnessByDemand(this.solutions) );
         this.agentMatchSolution();
