@@ -494,7 +494,7 @@ class Genetic {
         return true;
     }
 
-    agentMatchGens() {
+    agentsMatchGens() {
         // clean matched gens
         this.matchedGens = [];
         // for every agent...
@@ -517,8 +517,38 @@ class Genetic {
         this.matchedGens = [...new Set(this.matchedGens)];
     }
 
+    agentsMatchSolution() {
+        // clean solutions
+        this.solutions = [];
+        // copy agents
+        let agentKeys = this.agentsKeys;
+        // sort matched genes by cost
+        this.matchedGens.sort((a, b) => this.getGenCostByKey(a) - this.getGenCostByKey(b));
+        // for every solution...
+        for (let i = 0; i < this.matchedGens.length; ++i) {
+            let genKey = this.matchedGens[i];
+            // for every agent...
+            shuffle(agentKeys);
+            for (let j = 0; j < agentKeys.length; ++j) {
+                let agentKey = agentKeys[j];
+                let agent = this.agents[agentKey];
+                if (agent["gens"][genKey]) {
+                    // mark solution on agent
+                    agent["gens"][genKey] = "ok";
+                    // save solution
+                    this.solutions.push(genKey);
+                    // only one agent can have this solution
+                    agentKeys.splice(j, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    // TODO balance demand
+
     // get service demand of a genes array
-    demand(gensArr) {
+    /*demand(gensArr) {
         let demand = {};
         for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
             let key = this.servicesKeys[keyIndex];
@@ -533,7 +563,7 @@ class Genetic {
             }
         }
         return demand;
-    }
+    }*/
 
     /*fitnessByDemand(genKeys) {
         let demand = this.demand(genKeys);
@@ -560,41 +590,13 @@ class Genetic {
         }
     }*/
 
-    agentMatchSolution() {
-        let agentKeys = this.agentsKeys;
-        this.matchedGens.sort((a, b) => this.getGenCostByKey(a) - this.getGenCostByKey(b));
-        // complete demand
-
-        // for every solution...
-        for (let j = 0; j < this.matchedGens.length; ++j) {
-            let genKey = this.matchedGens[j];
-            // for every agent...
-            shuffle(agentKeys);
-            for (let i = 0; i < agentKeys.length; ++i) {
-                let agentKey = agentKeys[i];
-                let agent = this.agents[agentKey];
-                if (agent["gens"][genKey]) {
-                    agent["gens"][genKey] = "ok";
-                    // only one agent can have this solution
-                    agentKeys.splice(i, 1);
-                    break;
-                }
-            }
-        }
-    }
-
     distribution() {
         this.setServiceQuantInOrders();
         // console.log(this.services);
-        this.agentMatchGens();
+        this.agentsMatchGens();
         // console.log(this.agents);
-        console.log( this.matchedGens );
-
-        //this.buildSolutions();
-
-        // console.log(this.solutions);
-        // console.log( this.fitnessByDemand(this.solutions) );
-        this.agentMatchSolution();
+        // console.log( this.matchedGens );
+        this.agentsMatchSolution();
         // console.log(this.agents);
     }
 }
