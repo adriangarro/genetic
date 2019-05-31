@@ -763,7 +763,11 @@ function runGeneticAlgorithm() {
 
 function controlClickRun() {
     $("#run").click(function() {
-        runGeneticAlgorithm();
+        if (sessionStorage.getItem("agentsJSON") && sessionStorage.getItem("ordersJSON") ) {
+            runGeneticAlgorithm();
+        } else {
+            voiceProcessor.readOutLoud("Faltan datos por cargar.");
+        }
     });
 }
 
