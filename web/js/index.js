@@ -424,14 +424,14 @@ class Genetic {
 
     printGenFormatted(genKey) {
         let gen = this.population[genKey];
-        let result = "-";
+        let result = " ";
         let servicesKeys = Object.keys(gen);
         for (let i = 0; i < servicesKeys.length; ++i) {
             let serviceKey = servicesKeys[i];
             result = result 
                 + this.services[serviceKey].code 
                 + ":" + gen[serviceKey] 
-                + "-"
+                + " "
         }
         return result;
     }
@@ -495,7 +495,7 @@ class Genetic {
     }
 
     agentsMatchGens() {
-        // clean matched gens
+        // clean matched genes
         this.matchedGens = [];
         // for every agent...
         for (let i = 0; i < this.agentsKeys.length; ++i) {
@@ -545,50 +545,68 @@ class Genetic {
         }
     }
 
-    // TODO balance demand
-
-    // get service demand of a genes array
-    /*demand(gensArr) {
-        let demand = {};
-        for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
-            let key = this.servicesKeys[keyIndex];
-            demand[key] = 0;
+    getDemandOfServices() {
+        let servicesDemand = {};
+        for (let i = 0; i < this.servicesKeys.length; ++i) {
+            let key = this.servicesKeys[i];
+            servicesDemand[key] = this.services[key].demand;
         }
-        for (let i = 0; i < gensArr.length; ++i) {
-            let genKey = gensArr[i];
+        return servicesDemand;
+    }
+
+    // unify solutions
+    getDemandOfSolutions() {
+        let demandGen = {};
+        for (let i = 0; i < this.servicesKeys.length; ++i) {
+            let key = this.servicesKeys[i];
+            demandGen[key] = 0;
+        }
+        for (let i = 0; i < this.solutions.length; ++i) {
+            let genKey = this.solutions[i];
             let gen = this.population[genKey];
-            for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
-                let key = this.servicesKeys[keyIndex];
-                demand[key] = demand[key] + gen[key];
+            for (let j = 0; j < this.servicesKeys.length; ++j) {
+                let serviceKey = this.servicesKeys[j];
+                demandGen[serviceKey] = demandGen[serviceKey] + gen[serviceKey];
             }
         }
-        return demand;
-    }*/
+        return demandGen;
+    }
 
-    /*fitnessByDemand(genKeys) {
-        let demand = this.demand(genKeys);
-        let result = 0;
-        // for every service...
-        for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
-            let key = this.servicesKeys[keyIndex];
-            result = result + this.services[key]["demand"] - demand[key];
+    getRandGenKey(serviceKey) {
+        // rand solutions index
+        let j = Math.floor(Math.random() * this.solutions.length);
+        // take random gene where value in key be different of cero
+        let genKey = this.solutions[j];
+        let gen = this.population[genKey];
+        while (gen[serviceKey] == 0) {
+            j = Math.floor(Math.random() * this.solutions.length);
+            genKey = this.solutions[j];
+            gen = this.population[genKey];
         }
-        return result;
-    }*/
+        return genKey;
+    }
 
-    /*buildSolutions() {
-        shuffle(this.matchedGens);
-        this.solutions = [];
-        while (this.solutions.length < this.agentsKeys.length) {
-            let genKey = this.matchedGens[Math.floor(Math.random() * this.matchedGens.length)];
-            if (!this.solutions.includes(genKey)) this.solutions.push(genKey);
+    // balance demand for services in orders
+    fixLossesAndExcessInSolutions() {
+        let demandGen = this.getDemandOfSolutions();
+        while (!_.isEqual( demandGen, this.getDemandOfServices() ) ) {
+            // for every service...
+            for (let i = 0; i < this.servicesKeys.length; ++i) {
+                let key = this.servicesKeys[i];
+                if (demandGen[key] < this.services[key]["demand"]) {
+                    let genKey = this.getRandGenKey(key);
+                    let gen = this.population[genKey];
+                    gen[key] = gen[key] + 1;
+                } else if (demandGen[key] > this.services[key]["demand"]) {
+                    let genKey = this.getRandGenKey(key);
+                    let gen = this.population[genKey];
+                    gen[key] = gen[key] - 1;
+                }
+            }
+            demandGen = this.getDemandOfSolutions();
         }
-        // remove randoms gens until fitness will be positive
-        // zero is the optimal
-        while ( this.fitnessByDemand(this.solutions) < 0 ) {
-            this.solutions.splice(Math.floor(Math.random() * this.solutions.length), 1);
-        }
-    }*/
+        console.log(this.getDemandOfSolutions());
+    }
 
     distribution() {
         this.setServiceQuantInOrders();
@@ -598,6 +616,7 @@ class Genetic {
         // console.log( this.matchedGens );
         this.agentsMatchSolution();
         // console.log(this.agents);
+        this.fixLossesAndExcessInSolutions();
     }
 }
 
@@ -729,6 +748,25 @@ function setSolutionsInTable(g) {
     });
 }
 
+function runGeneticAlgorithm() {
+    $("#dna").modal("show");
+    setTimeout(function() {
+        let g = new Genetic();
+        g.evolution();
+        g.distribution();
+        $("#dna").modal("hide");
+        setSolutionsInTable(g);
+        searchIn("searchSolution", "tblBodySolutions");
+        $("#consultSolutions").modal("show");
+    }, 2500);
+}
+
+function controlClickRun() {
+    $("#run").click(function() {
+        runGeneticAlgorithm();
+    });
+}
+
 function main() {
     $(document).on("keypress", function(e) {
         // if press 1
@@ -832,7 +870,11 @@ function main() {
                         }
                     }
                     else if (command[0] == "CORRER") {
-                        // TODO
+                        if (sessionStorage.getItem("agentsJSON") && sessionStorage.getItem("ordersJSON") ) {
+                            runGeneticAlgorithm();
+                        } else {
+                            voiceProcessor.readOutLoud("Faltan datos por cargar.");
+                        }
                     }
                     else {
                         voiceProcessor.readOutLoud("Comando no identificado.");
@@ -845,26 +887,12 @@ function main() {
     });
 }
 
-function runGeneticAlgorithm() {
-    $("#dna").modal("show");
-    setTimeout(function() {
-        let g = new Genetic();
-        g.evolution();
-        g.distribution();
-        $("#dna").modal("hide");
-        // TODO table with Sols
-        setSolutionsInTable(g);
-        searchIn("searchSolution", "tblBodySolutions");
-        $("#consultSolutions").modal("show");
-    }, 2500);
-}
-
 jQuery(
     $(document).ready(function () {
         loadJSON("agentsJSON"),
         loadJSON("ordersJSON"),
         controlModalTables(),
-        main(),
-        runGeneticAlgorithm()
+        controlClickRun(),
+        main()
     })
 );
