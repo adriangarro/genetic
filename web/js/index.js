@@ -852,7 +852,7 @@ function runGeneticAlgorithm() {
         $("#dna").modal("hide");
         // TODO table with Sols
         setSolutionsInTable(g);
-        searchIn("searchAgent", "tblBodyAgents");
+        searchIn("searchSolution", "tblBodySolutions");
         $("#consultSolutions").modal("show");
     }, 2500);
 }
