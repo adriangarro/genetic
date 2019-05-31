@@ -758,7 +758,7 @@ function runGeneticAlgorithm() {
         setSolutionsInTable(g);
         searchIn("searchSolution", "tblBodySolutions");
         $("#consultSolutions").modal("show");
-    }, 2500);
+    }, 1000);
 }
 
 function controlClickRun() {
