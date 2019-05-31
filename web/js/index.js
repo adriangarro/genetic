@@ -240,10 +240,6 @@ class Genetic {
         return this.orders;
     }
 
-    getGens() {
-        return this.population;
-    }
-
     getGenHours(gen) {
         // param: gen = { service0 : quant0, service1 : quant1, ...}
         let hours = 0;
@@ -255,6 +251,11 @@ class Genetic {
         return hours;
     }
 
+    getGenHoursByKey(key) {
+        let gen = this.population[key];
+        return this.getGenHours(gen);
+    }
+
     getGenCost(gen) {
         // param: gen = { service0 : quant0, service1 : quant1, ...}
         let cost = 0;
@@ -264,6 +265,11 @@ class Genetic {
             cost = cost + ( gen[key] * this.services[key].cost );
         }
         return cost;
+    }
+
+    getGenCostByKey(key) {
+        let gen = this.population[key];
+        return this.getGenCost(gen);
     }
 
     setInitPopulation() {
@@ -285,10 +291,6 @@ class Genetic {
             let genUUID = "g" + faker.random.uuid();
             this.population[genUUID] = gen;
         }
-    }
-
-    getPopulation() {
-        return this.population;
     }
 
     getServiceKeyByCode(code) {
@@ -420,6 +422,20 @@ class Genetic {
         console.log("Cost: " + this.getGenCost(gen));
     }
 
+    printGenFormatted(genKey) {
+        let gen = this.population[genKey];
+        let result = "-";
+        let servicesKeys = Object.keys(gen);
+        for (let i = 0; i < servicesKeys.length; ++i) {
+            let serviceKey = servicesKeys[i];
+            result = result 
+                + this.services[serviceKey].code 
+                + ":" + gen[serviceKey] 
+                + "-"
+        }
+        return result;
+    }
+
     printPopulation() {
         let populationKeys = Object.keys(this.population);
         console.log("N:" + populationKeys.length);
@@ -525,7 +541,7 @@ class Genetic {
         // for every service...
         for (let keyIndex = 0; keyIndex < this.servicesKeys.length; ++keyIndex) {
             let key = this.servicesKeys[keyIndex];
-            result = result + (this.services[key]["demand"] - demand[key]);
+            result = result + this.services[key]["demand"] - demand[key];
         }
         return result;
     }
@@ -539,21 +555,26 @@ class Genetic {
         }
         // remove randoms gens until fitness will be positive
         // zero is the optimal
-        while ( this.fitnessByDemand(this.solutions) < 0 ) {
+        /*while ( this.fitnessByDemand(this.solutions) < 0 ) {
             this.solutions.splice(Math.floor(Math.random() * this.solutions.length), 1);
-        }
+        }*/
     }
 
     agentMatchSolution() {
+        let agentKeys = this.agentsKeys;
         // for every solution...
         for (let j = 0; j < this.solutions.length; ++j) {
             let genKey = this.solutions[j];
             // for every agent...
-            for (let i = 0; i < this.agentsKeys.length; ++i) {
-                let agentKey = this.agentsKeys[i];
+            shuffle(agentKeys);
+            for (let i = 0; i < agentKeys.length; ++i) {
+                let agentKey = agentKeys[i];
                 let agent = this.agents[agentKey];
                 if (agent["gens"][genKey]) {
                     agent["gens"][genKey] = "ok";
+                    // only one agent can have this solution
+                    agentKeys.splice(i, 1);
+                    break;
                 }
             }
         }
@@ -666,15 +687,38 @@ function controlModalTables() {
     });
 }
 
-function setSolutionsInTable(agents) {
+function setSolutionsInTable(g) {
     // clean table
     $("#tblBodySolutions").empty();
-    Object.keys(agents).forEach(function(key) {
+    let agents = g.getAgents();
+    Object.keys(agents).forEach(function(agentKey) {
         let row = "<tr>"
-            + "<td>" + key + "</td>"
-            + "<td>" + agents[key].name + "</td>"
-            + "</tr>";
-        $(row).appendTo("#tblBodySolutions");
+            + "<td>" + agentKey + "</td>"
+            + "<td>" + agents[agentKey].name + "</td>";
+        let gensMatched = agents[agentKey].gens;
+        if ( !$.isEmptyObject(gensMatched) ) {
+            let values = Object.values( gensMatched );
+            if (values.includes("ok")) {
+                Object.keys(gensMatched).forEach(function(genKey) {
+                    if ( gensMatched[genKey] == "ok" ) {
+                        let derivedRow = row;
+                        derivedRow = derivedRow 
+                            + "<td>" + g.printGenFormatted(genKey) + "</td>"
+                            + "<td>" + g.getGenCostByKey(genKey) + "</td>"
+                            + "<td>" + g.getGenHoursByKey(genKey) + "</td>"
+                            + "<td> D </td>";
+                        derivedRow = derivedRow + "</tr>";
+                        $(derivedRow).appendTo("#tblBodySolutions");
+                    }
+                });
+            } else {
+                row = row + "<td> - </td><td> - </td><td> - </td><td> - </td></tr>";
+                $(row).appendTo("#tblBodySolutions");
+            }
+        } else {
+            row = row + "<td> - </td><td> - </td><td> - </td><td> - </td></tr>";
+            $(row).appendTo("#tblBodySolutions");
+        }
     });
 }
 
@@ -802,10 +846,10 @@ function runGeneticAlgorithm() {
         g.distribution();
         $("#dna").modal("hide");
         // TODO table with Sols
-        setSolutionsInTable(g.getAgents());
-        //searchIn("searchAgent", "tblBodyAgents");
+        setSolutionsInTable(g);
+        searchIn("searchAgent", "tblBodyAgents");
         $("#consultSolutions").modal("show");
-    }, 5000);
+    }, 2500);
 }
 
 jQuery(
