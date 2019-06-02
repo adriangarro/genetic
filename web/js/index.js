@@ -577,8 +577,14 @@ class Genetic {
         let j = Math.floor(Math.random() * this.solutions.length);
         // take random gene where value in key be different of cero
         let genKey = this.solutions[j];
+        let attempts = 0;
         let gen = this.population[genKey];
-        while (gen[serviceKey] == 0) {
+        // best case while find someone that can handle the service
+        // worst case while the attemps excess solutions number, give them to any agent
+        while ( gen[serviceKey] == 0 && attempts < this.solutions.length ) {
+            // guard in case of not find gen[serviceKey] != 0
+            attempts = attempts + 1;
+            // getting a new rand gen
             j = Math.floor(Math.random() * this.solutions.length);
             genKey = this.solutions[j];
             gen = this.population[genKey];
@@ -600,7 +606,7 @@ class Genetic {
                 } else if (demandGen[key] > this.services[key]["demand"]) {
                     let genKey = this.getRandGenKey(key);
                     let gen = this.population[genKey];
-                    gen[key] = gen[key] - 1;
+                    if (gen[key] > 0) gen[key] = gen[key] - 1;
                 }
             }
             demandGen = this.getDemandOfSolutions();
