@@ -731,6 +731,13 @@ function controlModalTables() {
     });
 }
 
+function enableOrdersButtons() {
+    $("#tblBodySolutions").on("click", ".btn-ord", function () {
+        let genKey = this.value;
+        console.log(genKey);
+    });
+}
+
 function setSolutionsInTable(g) {
     // clean table
     $("#tblBodySolutions").empty();
@@ -769,7 +776,7 @@ function setSolutionsInTable(g) {
             $(row).appendTo("#tblBodySolutions");
         }
     });
-    // TODO enable orders buttons
+    enableOrdersButtons();
 }
 
 function runGeneticAlgorithm() {
