@@ -422,8 +422,21 @@ class Genetic {
         console.log("Cost: " + this.getGenCost(gen));
     }
 
-    printGenFormatted(genKey) {
+    getGenFormatted(genKey) {
         let gen = this.population[genKey];
+        let result = " ";
+        let servicesKeys = Object.keys(gen);
+        for (let i = 0; i < servicesKeys.length; ++i) {
+            let serviceKey = servicesKeys[i];
+            result = result 
+                + this.services[serviceKey].code 
+                + ":" + gen[serviceKey] 
+                + " "
+        }
+        return result;
+    }
+
+    getGenFormatted2(gen) {
         let result = " ";
         let servicesKeys = Object.keys(gen);
         for (let i = 0; i < servicesKeys.length; ++i) {
@@ -611,7 +624,6 @@ class Genetic {
             }
             demandGen = this.getDemandOfSolutions();
         }
-        console.log(this.getDemandOfSolutions());
     }
 
     distribution() {
@@ -735,7 +747,7 @@ function setSolutionsInTable(g) {
                     if ( gensMatched[genKey] == "ok" ) {
                         let derivedRow = row;
                         derivedRow = derivedRow 
-                            + "<td>" + g.printGenFormatted(genKey) + "</td>"
+                            + "<td>" + g.getGenFormatted(genKey) + "</td>"
                             + "<td>" + g.getGenCostByKey(genKey) + "</td>"
                             + "<td>" + g.getGenHoursByKey(genKey) + "</td>"
                             + "<td> D </td>";
@@ -755,6 +767,7 @@ function setSolutionsInTable(g) {
 }
 
 function runGeneticAlgorithm() {
+    $("#pDemand").text("");
     $("#dna").modal("show");
     setTimeout(function() {
         let g = new Genetic();
@@ -763,6 +776,7 @@ function runGeneticAlgorithm() {
         $("#dna").modal("hide");
         setSolutionsInTable(g);
         searchIn("searchSolution", "tblBodySolutions");
+        $("#pDemand").text( "Demanda ->" + g.getGenFormatted2( g.getDemandOfSolutions() ) );
         $("#consultSolutions").modal("show");
     }, 1000);
 }
