@@ -731,10 +731,25 @@ function controlModalTables() {
     });
 }
 
-function enableOrdersButtons() {
+function setOrdersOfAgentInTable(agentGenKey, g) {
+    // clean table
+    $("#tblBodyOrdersAgent").empty();
+    let orders = g.getOrders();
+    Object.keys(orders).forEach(function(key) {
+        let row = "<tr>"
+            + "<td>" + key + "</td>"
+            + "<td>" + orders[key].client + "</td>"
+            + "<td>" + orders[key].service + "</td>"
+            + "</tr>";
+        $(row).appendTo("#tblBodyOrdersAgent");
+    });
+}
+
+function enableOrdersButtons(g) {
     $("#tblBodySolutions").on("click", ".btn-ord", function () {
         let genKey = this.value;
-        console.log(genKey);
+        setOrdersOfAgentInTable(genKey, g);
+        $("#consultOrdersAgent").modal("show");
     });
 }
 
@@ -776,7 +791,7 @@ function setSolutionsInTable(g) {
             $(row).appendTo("#tblBodySolutions");
         }
     });
-    enableOrdersButtons();
+    enableOrdersButtons(g);
 }
 
 function runGeneticAlgorithm() {
