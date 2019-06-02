@@ -801,14 +801,13 @@ function main() {
                     else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
                             let agentQuant = parseInt(command[1]);
-                            // TODO max
-                            if (agentQuant >= 20) {
+                            if (agentQuant >= 20 && agentQuant <= 150) {
                                 data.setMaxAgentQuantToCreate( agentQuant );
                                 voiceProcessor.readOutLoud(
                                     "La cantidad de agentes para crear se ha cambiado a " + command[1]
                                 );
                             } else {
-                                voiceProcessor.readOutLoud("La cantidad de agentes debe ser mayor a veinte.");
+                                voiceProcessor.readOutLoud("La cantidad de agentes debe ser mayor a 20 y menor a 150.");
                             }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
@@ -818,14 +817,13 @@ function main() {
                     else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
                             let orderQuant = parseInt(command[1]);
-                            // TODO max
-                            if (orderQuant >= 10) {
+                            if (orderQuant >= 10 && orderQuant <= 150) {
                                 data.setMaxOrderQuantToCreate( orderQuant );
                                 voiceProcessor.readOutLoud(
                                     "La cantidad de órdenes para crear se ha cambiado a " + command[1]
                                 );
                             } else {
-                                voiceProcessor.readOutLoud("La cantidad de órdenes debe ser mayor a diez.");
+                                voiceProcessor.readOutLoud("La cantidad de órdenes debe ser mayor a diez y menor a 150.");
                             }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
