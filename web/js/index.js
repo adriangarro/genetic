@@ -745,12 +745,17 @@ function setSolutionsInTable(g) {
             if (values.includes("ok")) {
                 Object.keys(gensMatched).forEach(function(genKey) {
                     if ( gensMatched[genKey] == "ok" ) {
+                        let buttonCode = "<button type=\"button\" class=\"btn btn-success btn-xs btn-ord\" value=\""
+                            + genKey
+                            + "\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"Órdenes\""
+                            + ">" // text
+                            + "<span class=\"glyphicon glyphicon-align-justify\"></span></button>";
                         let derivedRow = row;
                         derivedRow = derivedRow 
                             + "<td>" + g.getGenFormatted(genKey) + "</td>"
                             + "<td>" + g.getGenCostByKey(genKey) + "</td>"
                             + "<td>" + g.getGenHoursByKey(genKey) + "</td>"
-                            + "<td> D </td>";
+                            + "<td>" +  buttonCode + "</td>";
                         derivedRow = derivedRow + "</tr>";
                         $(derivedRow).appendTo("#tblBodySolutions");
                     }
@@ -764,6 +769,7 @@ function setSolutionsInTable(g) {
             $(row).appendTo("#tblBodySolutions");
         }
     });
+    // TODO enable orders buttons
 }
 
 function runGeneticAlgorithm() {
