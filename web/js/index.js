@@ -767,7 +767,6 @@ function setOrdersOfAgentInTable(agentGenKey, g) {
                 }
             }
         }
-        
     });
 }
 
