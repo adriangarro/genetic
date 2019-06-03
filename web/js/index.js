@@ -240,6 +240,10 @@ class Genetic {
         return this.orders;
     }
 
+    getPopulation() {
+        return this.population;
+    }
+
     getGenHours(gen) {
         // param: gen = { service0 : quant0, service1 : quant1, ...}
         let hours = 0;
@@ -734,14 +738,36 @@ function controlModalTables() {
 function setOrdersOfAgentInTable(agentGenKey, g) {
     // clean table
     $("#tblBodyOrdersAgent").empty();
+    // get agent gen
+    let gens = g.getPopulation();
+    let gen = gens[agentGenKey];
     let orders = g.getOrders();
-    Object.keys(orders).forEach(function(key) {
-        let row = "<tr>"
-            + "<td>" + key + "</td>"
-            + "<td>" + orders[key].client + "</td>"
-            + "<td>" + orders[key].service + "</td>"
-            + "</tr>";
-        $(row).appendTo("#tblBodyOrdersAgent");
+    let ordersKeys = Object.keys(orders);
+    $.each(gen, function (i, val) {
+        // if agent can work this service
+        if (val > 0) {
+            let count = 0;
+            while (count < val) {
+                // get rand order
+                let index = Math.floor ( Math.random() * ordersKeys.length );
+                let key = ordersKeys[index];
+                // if service match with order, 
+                if (i == g.getServiceKeyByCode(orders[key].service)) {
+                    // set row
+                    let row = "<tr>"
+                        + "<td>" + key + "</td>"
+                        + "<td>" + orders[key].client + "</td>"
+                        + "<td>" + orders[key].service + "</td>"
+                        + "</tr>";
+                    $(row).appendTo("#tblBodyOrdersAgent");
+                    // delete order from array
+                    ordersKeys.splice(index, 1);
+                    // order assigment ready
+                    count = count + 1;
+                }
+            }
+        }
+        
     });
 }
 
