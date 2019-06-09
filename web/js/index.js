@@ -620,7 +620,7 @@ class Genetic {
                 if (demandGen[key] < this.services[key]["demand"]) {
                     let genKey = this.getRandGenKey(key);
                     let gen = this.population[genKey];
-                    if (this.getGenCost(gen) < 40) gen[key] = gen[key] + 1;
+                    gen[key] = gen[key] + 1;
                 } else if (demandGen[key] > this.services[key]["demand"]) {
                     let genKey = this.getRandGenKey(key);
                     let gen = this.population[genKey];
@@ -801,8 +801,14 @@ function setSolutionsInTable(g) {
                         let derivedRow = row;
                         derivedRow = derivedRow 
                             + "<td>" + g.getGenFormatted(genKey) + "</td>"
-                            + "<td>" + g.getGenCostByKey(genKey) + "</td>"
-                            + "<td>" + g.getGenHoursByKey(genKey) + "</td>"
+                            + "<td>" + g.getGenCostByKey(genKey) + "</td>";
+                        if (g.getGenHoursByKey(genKey) < 40) {
+                            derivedRow = derivedRow
+                                + "<td>" + g.getGenHoursByKey(genKey) + "</td>"
+                        } else {
+                            derivedRow = derivedRow + "<td>40</td>"
+                        }
+                        derivedRow = derivedRow    
                             + "<td>" +  buttonCode + "</td>";
                         derivedRow = derivedRow + "</tr>";
                         $(derivedRow).appendTo("#tblBodySolutions");
