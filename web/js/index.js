@@ -878,13 +878,13 @@ function main() {
                     else if (command[0] == "AGENTES" || command[0] == "AGENTE") {
                         if ( isPositiveInt(command[1]) ) {
                             let agentQuant = parseInt(command[1]);
-                            if (agentQuant >= 6 /*&& agentQuant <= 2000*/) {
+                            if (agentQuant >= 6 && agentQuant <= 1000) {
                                 data.setMaxAgentQuantToCreate( agentQuant );
                                 voiceProcessor.readOutLoud(
                                     "La cantidad de agentes para crear se ha cambiado a " + command[1]
                                 );
                             } else {
-                                voiceProcessor.readOutLoud("La cantidad de agentes debe ser mayor a 6 y menor a 2000.");
+                                voiceProcessor.readOutLoud("La cantidad de agentes debe ser mayor a 6 y menor a 1000.");
                             }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
@@ -894,13 +894,13 @@ function main() {
                     else if (command[0] == "ORDENES" || command[0] == "ORDEN") {
                         if ( isPositiveInt(command[1]) ) {
                             let orderQuant = parseInt(command[1]);
-                            if (orderQuant >= 10 /*&& orderQuant <= 200*/) {
+                            if (orderQuant >= 10 && orderQuant <= 1000) {
                                 data.setMaxOrderQuantToCreate( orderQuant );
                                 voiceProcessor.readOutLoud(
                                     "La cantidad de órdenes para crear se ha cambiado a " + command[1]
                                 );
                             } else {
-                                voiceProcessor.readOutLoud("La cantidad de órdenes debe ser mayor a 10 y menor a 200.");
+                                voiceProcessor.readOutLoud("La cantidad de órdenes debe ser mayor a 10 y menor a 1000.");
                             }
                         } else {
                             voiceProcessor.readOutLoud("Valor inválido.");
