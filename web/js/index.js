@@ -620,7 +620,7 @@ class Genetic {
                 if (demandGen[key] < this.services[key]["demand"]) {
                     let genKey = this.getRandGenKey(key);
                     let gen = this.population[genKey];
-                    gen[key] = gen[key] + 1;
+                    if (this.getGenCost(gen) < 40) gen[key] = gen[key] + 1;
                 } else if (demandGen[key] > this.services[key]["demand"]) {
                     let genKey = this.getRandGenKey(key);
                     let gen = this.population[genKey];
