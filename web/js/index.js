@@ -224,7 +224,7 @@ class Genetic {
         this.totalHours = 34;
         this.totalHoursFixed = 40;
         this.heuristicVal = 0;
-        this.survivorsPercentage = 0.125;
+        this.survivorsPercentage = 0.25;
         this.matchedGens = [];
         this.solutions = [];
     }
