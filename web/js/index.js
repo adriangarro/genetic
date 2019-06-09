@@ -793,6 +793,9 @@ function setSolutionsInTable(g) {
             if (values.includes("ok")) {
                 Object.keys(gensMatched).forEach(function(genKey) {
                     if ( gensMatched[genKey] == "ok" ) {
+                        if (g.getGenHoursByKey(genKey) > 40) {
+                            alert("El límite semanal de horas laborales se excedió. Se recomienda asignar más agentes para cumplir la demanda.");
+                        }
                         let buttonCode = "<button type=\"button\" class=\"btn btn-success btn-xs btn-ord\" value=\""
                             + genKey
                             + "\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"Órdenes\""
